@@ -1,5 +1,64 @@
-{% extends "base.html" %}
+{% include 'base.html' %}
 
-{% block content %}
-<h1>Index</h1>
-{% endblock %} 
+<style>
+    a {
+        text-decoration: none;
+        color: black;
+    }
+    .card-body a:hover{
+        color: cornflowerblue;
+    }
+    .lista{
+        list-style-type: none;
+    }
+</style>
+<div class="container">
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card text-bg-light border-dark mb-3" style="max-width: 18rem;">
+                <div class="card-header"><a href="/estacionamiento/">Estacionamiento</a></div>
+                <div class="card-body">
+                    <ul>
+                        <li class="lista">
+                            <a href="/estacionamiento/inout">Entradas / Salidas</a>
+                        </li>
+                        <li class="lista">
+                            <a href="/estacionamiento/ver">Visualizar Estacionamiento</a>
+                        </li>
+                        <li class="lista">
+                            <a href="#">Buscar lugar / ticket</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-bg-light border-dark mb-3" style="max-width: 18rem;">
+                <div class="card-header">Notificaciones</div>
+                <div class="card-body">
+                    <ul>
+                        <li class="lista">
+                            <a href="#">Alertas</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-bg-light border-dark mb-3" style="max-width: 18rem;">
+                <div class="card-header">Configuracion</div>
+                <div class="card-body">
+                    <ul>
+                        <li class="lista"><a href="#">Agregar lugar</a></li>
+                        <li class="lista"><a href="#">Eliminar lugar</a></li>
+                        <li class="lista"><a href="#">Modificar lugar</a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'end.html' %}
