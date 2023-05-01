@@ -7,92 +7,116 @@
                 <br>
                 <div class="row"> <!-- Esto es pa iniciar la fila principal-->
                     <div class="col-8"><!--Columna espacios de estacionamiento-->
-                        <div class="row"><!--Seccion de Autos-->
-                            <div class="row"><!--solo contendra 10 lugares-->
-                            {% for i in range(aLenght) %}
-                                <!-- Inicia Preset de un lugar-->
-                                <div class="col">
-                                    <div class="lugar" style="background-color:  {% if Autos[i][3] is true %}rgb(2, 226, 84){% else %}rgb(252, 75, 56){% endif %};">
-                                        <p>{{ Autos[i][0] }} </p>
+                        <div class="container-fluid">
+                            <div class="row"><!--Seccion de Autos-->
+                                <div class="row"><!--solo contendra 10 lugares-->
+                                {% for i in range(aLenght) %}
+                                    <!-- Inicia Preset de un lugar-->
+                                    <div class="col">
+                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color:rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>
+                                            <p>{{ Autos[i][0] }} </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--Finaliza preset del lugar-->
-                                {% if (i + 1) % (10) == 0 %}
-                            </div>
-                            <div class="row">
-                                {% endif %}
-                            {% endfor %}
-                                {% set cont = (aLenght-(anL*10)) %}
-                                {% if cont < 10 %} 
-                                    {% for i in range(10-cont) %} 
-                                <div class="col">
-                                    <div class="lugar-noasignado">
-                                    </div>
-                                </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row"><!--Seccion de Discapacitados-->
-                            <div class="row"><!--solo contendra 10 lugares-->
-                            {% for i in range(dLenght) %}
-                                <!-- Inicia Preset de un lugar-->
-                                <div class="col">
-                                    <div class="lugar" style="background-color: {% if Discapacitados[i][3] is true %}rgb(2, 226, 84){% else %}rgb(252, 75, 56){% endif %};">
-                                        <p>{{ Discapacitados[i][0] }}</p>
-                                    </div>
-                                </div>
                                     <!--Finaliza preset del lugar-->
-                                {% if (i + 1) % (10) == 0 %}
-                            </div>
-                            <div class="row">
-                                {% endif %}
-                            {% endfor %}
-                                {% set cont = (dLenght-(dnL*10)) %}
-                                {% if cont < 10 %}
-                                    {% for i in range(10-cont) %} 
-                                <div class="col">
-                                    <div class="lugar-noasignado">
-                                    </div>
+                                    {% if (i + 1) % (10) == 0 %}
                                 </div>
-                                    {% endfor %}
-                                {% endif %}
+                                <div class="row">
+                                    {% endif %}
+                                {% endfor %}
+                                    {% set cont = (aLenght-(anL*10)) %}
+                                    {% if cont < 10 %} 
+                                        {% for i in range(10-cont) %} 
+                                    <div class="col">
+                                        <div class="lugar-noasignado">
+                                        </div>
+                                    </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row"><!--Seccion de Discapacitados-->
+                                <div class="row"><!--solo contendra 10 lugares-->
+                                {% for i in range(dLenght) %}
+                                    <!-- Inicia Preset de un lugar-->
+                                    <div class="col">
+                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color: rgb(252, 75, 56);"{% endif %}>
+                                            <p>{{ Discapacitados[i][0] }}</p>
+                                        </div>
+                                    </div>
+                                        <!--Finaliza preset del lugar-->
+                                    {% if (i + 1) % (10) == 0 %}
+                                </div>
+                                <div class="row">
+                                    {% endif %}
+                                {% endfor %}
+                                    {% set cont = (dLenght-(dnL*10)) %}
+                                    {% if cont < 10 %}
+                                        {% for i in range(10-cont) %} 
+                                    <div class="col">
+                                        <div class="lugar-noasignado">
+                                        </div>
+                                    </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row"><!--Seccion de Motos-->
+                                <div class="row"><!--solo contendra 10 lugares-->
+                                {% for i in range(mLenght) %}
+                                <!-- Inicia Preset de un lugar-->
+                                    <div class="col">
+                                        <div class="lugar"  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>
+                                            <p>{{ Motos[i][0] }}</p>
+                                        </div>
+                                    </div>
+                                    <!--Finaliza preset del lugar-->
+                                    {% if (i + 1) % (10) == 0 %}
+                                </div>
+                                <div class="row"><!--solo contendra 10 lugares-->
+                                    {% endif %}
+                                {% endfor %}
+                                    {% set cont = (mLenght-(mnL*10)) %}
+                                    {% if cont < 10 %} 
+                                        {% for i in range(10-cont) %} 
+                                    <div class="col">
+                                        <div class="lugar-noasignado">
+                                        </div>
+                                    </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
                             </div>
                         </div>
-                        <div class="row"><!--Seccion de Motos-->
-                            <div class="row"><!--solo contendra 10 lugares-->
-                            {% for i in range(mLenght) %}
-                            <!-- Inicia Preset de un lugar-->
-                                <div class="col">
-                                    <div class="lugar" style="background-color: {% if Motos[i][3] is true %}rgb(2, 226, 84){% else %}rgb(252, 75, 56){% endif %};">
-                                        <p>{{ Motos[i][0] }}</p>
-                                    </div>
-                                </div>
-                                <!--Finaliza preset del lugar-->
-                                {% if (i + 1) % (10) == 0 %}
-                            </div>
-                            <div class="row"><!--solo contendra 10 lugares-->
-                                {% endif %}
-                            {% endfor %}
-                                {% set cont = (mLenght-(mnL*10)) %}
-                                {% if cont < 10 %} 
-                                    {% for i in range(10-cont) %} 
-                                <div class="col">
-                                    <div class="lugar-noasignado">
-                                    </div>
-                                </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
+                        <div class="col-4"> <!--columna entrada-->
+                             Entrada
                         </div>
                         </div>
-                    <div class="col-4"> <!--columna entrada-->
-                         Entrada
                     </div>
+            <div class="col-4 bg-light">
+                <div class="container">
+                    <form action="/estacionamiento/ver/search" method="post" class="d-flex" role="search">
+                        <input name="txtSearch" id="txtSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <br>
+                    <div class="card text-center">
+                        <div class="card-header">
+                          {% if find == '' %}{% else %}Busqueda encontrada{% endif %}
+                        </div>
+                        <div class="card-body">
+                          <h5 class="card-title">{% if find == '' %}Lugar{% else %}Lugar: {{ find[0][0] }}{% endif %}</h5>
+                          <p class="card-text">{% if find == '' %}{% else %}
+                            Seccion: {% if find[0][2] == 'auto' %}Automoviles{% elif find[0][2] == 'discapacitado' %}Discapacitados{% elif find[0][2] == 'moto' %}Motos{% endif %} ({{ find[0][4] }}) <br>
+                            Estado: {% if find[0][3] == true %}Disponible{% else %}Ocupado{% endif %}
+                            {% endif %}
+                        </p>
+                        </div>
+                        <div class="card-footer text-body-secondary">
+                            <br>
+                        </div>
                     </div>
                 </div>
-            <div class="col-4" style="background-color: aqua;">
-            Second Column
             </div>
         </div>
     </div>

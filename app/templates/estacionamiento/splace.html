@@ -1,0 +1,80 @@
+{% include 'base.html' %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <di class="col-8">
+            <div class="container">
+                <form action="/estacionamiento/search/find" method="post" role="search">
+                    <div class="input-group ">
+                        <input name="txtSearch" id="txtSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo" id="tipo" value="ticket" checked>
+                            <label class="form-check-label" for="tipo">Ticket</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo" id="tipo" value="lugar">
+                            <label class="form-check-label" for="tipo">Lugar</label>
+                        </div>
+                    </div>
+                </form>
+                <br>
+                <div class="card text-center">
+                    <div class="card-header">
+                      {% if find != '' %}
+                        Resultado encontrado
+                      {% endif %}
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        {% if find != '' %}
+                            {% if tipo == 'l' %}
+                                Lugar: {{ find[0][0] }}
+                            {% endif %}
+                            {% if tipo == 't' %}
+                                N Ticket: Ticket prueba
+                            {% endif %}
+                        {% endif %}
+                    </h5>
+                      <p class="card-text">
+                        {% if find != '' %}
+                            {% if tipo == 'l' %}
+                                Seccion: 
+                                {% if find[0][2] == 'auto' %}Automoviles
+                                    {% elif find[0][2] == 'discapacitado' %}Discapacitados
+                                    {% elif find[0][2] == 'moto' %}Motos
+                                {% endif %} ({{ find[0][4] }}) <br>
+                                Estado: 
+                                {% if find[0][3] == true %}Disponible
+                                    {% else %}Ocupado
+                                {% endif %}
+                            {% endif %}
+                            {% if tipo == 't' %}
+                                Lugar: 
+                                <br>
+                                Hora Entrada: 
+                                <br>
+                                Hora Salida: 
+                                <br>
+                                Tiempo en Estacionamiento: 
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                    </div>
+                    <div class="card-footer text-body-secondary">
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+        
+    </div>
+</div>
+
+{% include 'end.html' %}
