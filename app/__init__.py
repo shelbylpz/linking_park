@@ -54,19 +54,19 @@ def estacionamiento_ver():
     find=''
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
     Autos = cursor.fetchall()
     aLenght = len(Autos)#Saber la cantidad de registros encontrados
     anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
     print(aLenght)
     print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
     Discapacitados = cursor.fetchall()
     dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
     dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
     print(dLenght)
     print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
     Motos = cursor.fetchall()
     mLenght = len(Motos)#Saber la cantidad de registros encontrados
     mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
@@ -87,19 +87,19 @@ def estacionamiento_ver_search():
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
     find = cursor.fetchall()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A';")
+    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero;")
     Autos = cursor.fetchall()
     aLenght = len(Autos)#Saber la cantidad de registros encontrados
     anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
     print(aLenght)
     print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
     Discapacitados = cursor.fetchall()
     dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
     dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
     print(dLenght)
     print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
     Motos = cursor.fetchall()
     mLenght = len(Motos)#Saber la cantidad de registros encontrados
     mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
@@ -146,19 +146,19 @@ def configuracion_agregar():
         return redirect('/login')
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
     Autos = cursor.fetchall()
     aLenght = len(Autos)#Saber la cantidad de registros encontrados
     anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
     print(aLenght)
     print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
     Discapacitados = cursor.fetchall()
     dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
     dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
     print(dLenght)
     print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
     Motos = cursor.fetchall()
     mLenght = len(Motos)#Saber la cantidad de registros encontrados
     mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
@@ -199,19 +199,19 @@ def configuracion_borrar():
         return redirect('/login')
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
     Autos = cursor.fetchall()
     aLenght = len(Autos)#Saber la cantidad de registros encontrados
     anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
     print(aLenght)
     print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
     Discapacitados = cursor.fetchall()
     dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
     dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
     print(dLenght)
     print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M'")
+    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
     Motos = cursor.fetchall()
     mLenght = len(Motos)#Saber la cantidad de registros encontrados
     mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
@@ -224,18 +224,62 @@ def configuracion_borrar():
 def configuracion_borrar_delete():
     if not 'login' in session:
         return redirect('/login')
-    _seccion = request.form['Seccion']
+    _id = request.form['txtId']
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT count(seccion) FROM lugar WHERE seccion='"+str(_seccion)+"';") #saber el numero de lugares totales
-    nl = cursor.fetchone()
-    nl = nl[0] #numero de lugares existentes y como tal el numero mas alto de los lugares de una seccion
-    print(nl)
-    cursor.execute("DELETE FROM lugar WHERE id='"+str(_seccion)+str(nl)+"';")
+    
+    cursor.execute("DELETE FROM lugar WHERE id='"+str(_id)+"';")
    
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/borrar')
+
+@app.route('/configuracion/modificar')
+def configuracion_modificar():
+    if not 'login' in session:
+        return redirect('/login')
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
+    Autos = cursor.fetchall()
+    aLenght = len(Autos)#Saber la cantidad de registros encontrados
+    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
+    print(aLenght)
+    print(Autos)
+    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
+    Discapacitados = cursor.fetchall()
+    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
+    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
+    print(dLenght)
+    print(Discapacitados)
+    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
+    Motos = cursor.fetchall()
+    mLenght = len(Motos)#Saber la cantidad de registros encontrados
+    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
+    print(mLenght)
+    print(Motos)
+    conexion.close()
+    return render_template('/configuracion/modplace.html' ,  Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+
+@app.route('/configuracion/modificar/update', methods=['POST'])
+def configuracion_modificar_update():
+    if not 'login' in session:
+        return redirect('/login')
+    _id = request.form['txtId']
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    
+    cursor.execute("SELECT * FROM lugar WHERE id='"+str(_id)+"';")
+    find = cursor.fetchone()
+    if find[3] == True:
+        cursor.execute("UPDATE lugar SET disponible='false' WHERE id='"+str(_id)+"';")
+    else:
+        cursor.execute("UPDATE lugar SET disponible='true' WHERE id='"+str(_id)+"';")
+   
+    conexion.commit()
+    conexion.close()
+    return redirect('/configuracion/modificar')
+
 #Rutas de Login y Logout
 @app.route("/login")
 def login():

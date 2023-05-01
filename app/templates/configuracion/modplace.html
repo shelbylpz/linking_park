@@ -16,9 +16,10 @@
                                 {% for i in range(aLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col">
-                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color:rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>
-                                            <p>{{ Autos[i][0] }} </p>
-                                        </div>
+                                        <form action="/configuracion/modificar/update" method="post">
+                                        <input value="{{ Autos[i][0] }}" type="hidden" name="txtId" id="txtId">
+                                        <button type="submit" class="" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Autos[i][0] }}</button>
+                                        </form>
                                     </div>
                                     <!--Finaliza preset del lugar-->
                                     {% if (i + 1) % (10) == 0 %}
@@ -29,19 +30,10 @@
                                     {% set cont = (aLenght-(anL*10)) %}
                                     {% if cont < 10 %} 
                                         {% for i in range(10-cont) %} 
-                                            {% if i == 0 %}
-                                            <div class="col">
-                                                <form action="/configuracion/agregar/add" method="post">
-                                                <input value="A" type="hidden" name="Seccion" id="Seccion">
-                                                <button type="submit" class="">+</button>
-                                                </form>
-                                            </div>
-                                            {% else  %}
                                     <div class="col">
                                         <div class="lugar-noasignado">
                                         </div>
                                     </div>
-                                            {% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 </div>
@@ -51,11 +43,14 @@
                                 <div class="row"><!--solo contendra 10 lugares-->
                                 {% for i in range(dLenght) %}
                                     <!-- Inicia Preset de un lugar-->
+                                    
                                     <div class="col">
-                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color: rgb(252, 75, 56);"{% endif %}>
-                                            <p>{{ Discapacitados[i][0] }}</p>
-                                        </div>
+                                        <form action="/configuracion/modificar/update" method="post">
+                                        <input value="{{ Discapacitados[i][0] }}" type="hidden" name="txtId" id="txtId">
+                                        <button type="submit" class="" {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Discapacitados[i][0] }}</button>
+                                        </form>
                                     </div>
+                                    
                                         <!--Finaliza preset del lugar-->
                                     {% if (i + 1) % (10) == 0 %}
                                 </div>
@@ -65,19 +60,11 @@
                                     {% set cont = (dLenght-(dnL*10)) %}
                                     {% if cont < 10 %}
                                         {% for i in range(10-cont) %} 
-                                        {% if i == 0 %}
-                                        <div class="col">
-                                            <form action="/configuracion/agregar/add" method="post">
-                                            <input value="D" type="hidden" name="Seccion" id="Seccion">
-                                            <button type="submit" class="" >+</button>
-                                            </form>
-                                        </div>
-                                        {% else  %}
+                                        
                                 <div class="col">
                                     <div class="lugar-noasignado">
                                     </div>
                                 </div>
-                                        {% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 </div>
@@ -86,12 +73,13 @@
                             <div class="row"><!--Seccion de Motos-->
                                 <div class="row"><!--solo contendra 10 lugares-->
                                 {% for i in range(mLenght) %}
-                                <!-- Inicia Preset de un lugar-->
                                     <div class="col">
-                                        <div class="lugar"  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>
-                                            <p>{{ Motos[i][0] }}</p>
-                                        </div>
+                                        <form action="/configuracion/modificar/update" method="post">
+                                        <input value="{{ Motos[i][0] }}" type="hidden" name="txtId" id="txtId">
+                                        <button type="submit" class="" {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Motos[i][0] }}</button>
+                                        </form>
                                     </div>
+                                    
                                     <!--Finaliza preset del lugar-->
                                     {% if (i + 1) % (10) == 0 %}
                                 </div>
@@ -101,19 +89,11 @@
                                     {% set cont = (mLenght-(mnL*10)) %}
                                     {% if cont < 10 %} 
                                         {% for i in range(10-cont) %} 
-                                    {% if i == 0 %}
-                                            <div class="col">
-                                                <form action="/configuracion/agregar/add" method="post">
-                                                <input value="M" type="hidden" name="Seccion" id="Seccion">
-                                                <button type="submit" class="">+</button>
-                                                </form>
-                                            </div>
-                                            {% else  %}
+                                    
                                     <div class="col">
                                         <div class="lugar-noasignado">
                                         </div>
                                     </div>
-                                            {% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 </div>

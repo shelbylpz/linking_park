@@ -18,8 +18,8 @@
                                     {% if i+1 == aLenght %}
                                     <div class="col">
                                         <form action="/configuracion/borrar/delete" method="post">
-                                        <input value="A" type="hidden" name="Seccion" id="Seccion">
-                                        <button type="submit" class="">{{ Autos[i][0] }}</button>
+                                        <input value="{{ Autos[i][0] }}" type="hidden" name="txtId" id="txtId">
+                                        <button type="submit" class="" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Autos[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
@@ -54,8 +54,8 @@
                                     {% if i+1 == dLenght %}
                                     <div class="col">
                                         <form action="/configuracion/borrar/delete" method="post">
-                                        <input value="D" type="hidden" name="Seccion" id="Seccion">
-                                        <button type="submit" class="">{{ Discapacitados[i][0] }}</button>
+                                        <input value="{{ Discapacitados[i][0] }}" type="hidden" name="txtId" id="txtId">
+                                        <button type="submit" class="" {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Discapacitados[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
@@ -90,8 +90,8 @@
                                     {% if i+1 == mLenght %}
                                     <div class="col">
                                         <form action="/configuracion/borrar/delete" method="post">
-                                        <input value="M" type="hidden" name="Seccion" id="Seccion">
-                                        <button type="submit" class="">{{ Motos[i][0] }}</button>
+                                        <input value="{{ Motos[i][0] }}" type="hidden" name="txtId" id="txtId">
+                                        <button type="submit" class="" {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Motos[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
