@@ -2,6 +2,7 @@ import os
 from math import floor,ceil
 from flask import Flask, render_template, request, redirect, session, send_from_directory
 import psycopg2 
+import random
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
@@ -139,8 +140,102 @@ def estacionamiento_search_find():
 #Rutas de Notificaciones
 
 #Rutas de configuraciones
+@app.route('/configuracion/agregar')
+def configuracion_agregar():
+    if not 'login' in session:
+        return redirect('/login')
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM lugar where seccion = 'A'")
+    Autos = cursor.fetchall()
+    aLenght = len(Autos)#Saber la cantidad de registros encontrados
+    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
+    print(aLenght)
+    print(Autos)
+    cursor.execute("SELECT * FROM lugar where seccion = 'D'")
+    Discapacitados = cursor.fetchall()
+    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
+    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
+    print(dLenght)
+    print(Discapacitados)
+    cursor.execute("SELECT * FROM lugar where seccion = 'M'")
+    Motos = cursor.fetchall()
+    mLenght = len(Motos)#Saber la cantidad de registros encontrados
+    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
+    print(mLenght)
+    print(Motos)
+    conexion.close()
+    return render_template("/configuracion/addplace.html",Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
+@app.route('/configuracion/agregar/add', methods=['POST'])
+def configuracion_agregar_add():
+    if not 'login' in session:
+        return redirect('/login')
+    _seccion = request.form['Seccion']
+    print(_seccion)
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT count(seccion) FROM lugar WHERE seccion='"+str(_seccion)+"';") #saber el numero de lugares totales
+    nl = cursor.fetchone()
+    nl = nl[0]
+    nl = nl+1 #Para sacar el numero de lugar segun los ya existentes
+    print(nl)
+    if _seccion == 'A':
+        cursor.execute("INSERT INTO lugar(id,numero,descripcion,disponible,seccion) VALUES ('A"+str(nl)+"','"+str(nl)+"','auto',true,'A');")
+        print('a')
+    if _seccion == 'D':
+        cursor.execute("INSERT INTO lugar(id,numero,descripcion,disponible,seccion) VALUES ('D"+str(nl)+"','"+str(nl)+"','discapacitado',true,'D');")
+        print("d")
+    if _seccion == 'M':
+        cursor.execute("INSERT INTO lugar(id,numero,descripcion,disponible,seccion) VALUES ('M"+str(nl)+"','"+str(nl)+"','moto',true,'M');")
+        print('m')
+    conexion.commit()
+    conexion.close()
+    return redirect('/configuracion/agregar')
 
+@app.route('/configuracion/borrar')
+def configuracion_borrar():
+    if not 'login' in session:
+        return redirect('/login')
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM lugar where seccion = 'A'")
+    Autos = cursor.fetchall()
+    aLenght = len(Autos)#Saber la cantidad de registros encontrados
+    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
+    print(aLenght)
+    print(Autos)
+    cursor.execute("SELECT * FROM lugar where seccion = 'D'")
+    Discapacitados = cursor.fetchall()
+    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
+    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
+    print(dLenght)
+    print(Discapacitados)
+    cursor.execute("SELECT * FROM lugar where seccion = 'M'")
+    Motos = cursor.fetchall()
+    mLenght = len(Motos)#Saber la cantidad de registros encontrados
+    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
+    print(mLenght)
+    print(Motos)
+    conexion.close()
+    return render_template('/configuracion/removeplace.html', Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+
+@app.route('/configuracion/borrar/delete', methods=['POST'])
+def configuracion_borrar_delete():
+    if not 'login' in session:
+        return redirect('/login')
+    _seccion = request.form['Seccion']
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT count(seccion) FROM lugar WHERE seccion='"+str(_seccion)+"';") #saber el numero de lugares totales
+    nl = cursor.fetchone()
+    nl = nl[0] #numero de lugares existentes y como tal el numero mas alto de los lugares de una seccion
+    print(nl)
+    cursor.execute("DELETE FROM lugar WHERE id='"+str(_seccion)+str(nl)+"';")
+   
+    conexion.commit()
+    conexion.close()
+    return redirect('/configuracion/borrar')
 #Rutas de Login y Logout
 @app.route("/login")
 def login():
