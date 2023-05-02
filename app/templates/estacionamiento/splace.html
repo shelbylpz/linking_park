@@ -36,7 +36,7 @@
                                 Lugar: {{ find[0][0] }}
                             {% endif %}
                             {% if tipo == 't' %}
-                                N Ticket: Ticket prueba
+                                N Ticket: {{ find[0][0] }}
                             {% endif %}
                         {% endif %}
                     </h5>
@@ -50,15 +50,17 @@
                                 {% endif %} ({{ find[0][4] }}) <br>
                                 Estado: 
                                 {% if find[0][3] == true %}Disponible
-                                    {% else %}Ocupado
+                                    {% else %}Ocupado <br>
+                                N Ticket: {{ find[0][5] }}
                                 {% endif %}
+                                 
                             {% endif %}
                             {% if tipo == 't' %}
-                                Lugar: 
+                                Lugar: {{ find[0][4] }}
                                 <br>
-                                Hora Entrada: 
+                                Hora Entrada: {{ find[0][1] }}
                                 <br>
-                                Hora Salida: 
+                                Hora Salida: {% if find[0][2] == 'null' %}{% else %}{{ find[0][2] }}{% endif %}
                                 <br>
                                 Tiempo en Estacionamiento: 
                             {% endif %}

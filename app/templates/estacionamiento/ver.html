@@ -108,7 +108,8 @@
                           <h5 class="card-title">{% if find == '' %}Lugar{% else %}Lugar: {{ find[0][0] }}{% endif %}</h5>
                           <p class="card-text">{% if find == '' %}{% else %}
                             Seccion: {% if find[0][2] == 'auto' %}Automoviles{% elif find[0][2] == 'discapacitado' %}Discapacitados{% elif find[0][2] == 'moto' %}Motos{% endif %} ({{ find[0][4] }}) <br>
-                            Estado: {% if find[0][3] == true %}Disponible{% else %}Ocupado{% endif %}
+                            Estado: {% if find[0][3] == true %}Disponible{% else %}Ocupado <br>{% endif %}
+                            {% if find[0][3] == true %}{% else %}N Ticket: {{ find[0][5] }}{% endif %}
                             {% endif %}
                         </p>
                         </div>

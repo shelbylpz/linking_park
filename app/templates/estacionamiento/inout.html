@@ -14,12 +14,14 @@
                             <th>Lugar</th>
                         </tr>
                     </thead>
+                    {% for ticket in tickets %}
                     <tbody>
-                        <td>250420231500-A15</td>
-                        <td>12:00</td>
-                        <td>18:00</td>
-                        <td>A15</td>
+                        <td>{{ ticket[0] }}</td>
+                        <td>{{ ticket[1] }}</td>
+                        <td>{% if ticket[2] == 'null' %}{% else %}{{ticket[2]}}{% endif %}</td>
+                        <td>{{ticket[4]}}</td>
                     </tbody>
+                    {% endfor %}
                 </table>
             </div>
         </div>

@@ -44,7 +44,13 @@ def estacionamiento():
 def entradas_salidas():
     if not 'login' in session:
         return redirect('/login')
-    return render_template("/estacionamiento/inout.html")
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ticket ORDER BY id;")
+    tickets = cursor.fetchall()
+    conexion.commit()
+    conexion.close()
+    return render_template("/estacionamiento/inout.html", tickets=tickets)
 
 #Seccion de visualizar el estacionamiento
 @app.route('/estacionamiento/ver')
@@ -133,9 +139,10 @@ def estacionamiento_search_find():
         tipo = 'l'
     if _tipo == 'ticket':
         print('Se intento buscar ticket')
-        find = 'h'
+        cursor.execute("SELECT * FROM ticket WHERE id='"+_lugar+"';")
+        find = cursor.fetchall()
         tipo = 't'
-    
+    print(find)
     return render_template('/estacionamiento/splace.html', find=find, tipo=tipo)
 #Rutas de Notificaciones
 
