@@ -94,6 +94,14 @@
                         </div>
                     </div>
             <div class="col-4 bg-light">
+                {% if mensaje %}
+            <div class="alert alert-danger" role="alert">
+              <strong>{{ mensaje }}</strong>
+              <br>
+              No se encontro ningun registro.
+            </div>
+              
+            {% endif %}
                 <div class="container">
                     <form action="/estacionamiento/ver/search" method="post" class="d-flex" role="search">
                         <input name="txtSearch" id="txtSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
