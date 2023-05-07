@@ -71,6 +71,8 @@
                                 Hora Salida: {% if find[0][2] == 'null' %}{% else %}{{ find[0][2] }}{% endif %}
                                 <br>
                                 Tiempo en Estacionamiento: {{ find[0][3] }}
+                                <br>
+                                <img src="/qr/{{ find[0][0] }}.png" alt="qr">
                             {% endif %}
                         {% endif %}
                     </p>

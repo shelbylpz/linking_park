@@ -1,3 +1,4 @@
+from QRCodes.QRGenerator import generator, generator_after_out
 import os
 from math import floor,ceil
 from flask import Flask, render_template, request, redirect, session, send_from_directory
@@ -27,6 +28,11 @@ def index():
 def imagenes(imagen):
     print(imagen)
     return send_from_directory(os.path.join('templates/img'),imagen)
+
+@app.route('/qr/<qrcode>')
+def qr(qrcode):
+    return send_from_directory(os.path.join('QRCodes/img'),qrcode)
+
 
 @app.route('/css/<archivocss>')
 def css_link(archivocss):
@@ -344,6 +350,8 @@ def configuracion_modificar_update():
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(_id)+"');"
         cursor.execute(sql)
         cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
+        
+        generator(nticket)
     else:
         idticket = find[5]
         cursor.execute("SELECT entrada FROM ticket WHERE id='"+str(idticket)+"';")
@@ -357,7 +365,6 @@ def configuracion_modificar_update():
         tiempo = fecha2 - fecha1  #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
         print(tiempo)
         cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
-
         cursor.execute("UPDATE lugar SET disponible='true', ticket=null WHERE id='"+str(_id)+"';")
    
     conexion.commit()
