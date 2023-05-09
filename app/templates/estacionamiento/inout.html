@@ -11,6 +11,7 @@
                             <th>ID</th>
                             <th>Hora Entrada</th>
                             <th>Hora Salida</th>
+                            <th>Tiempo En Sitio</th>
                             <th>Lugar</th>
                         </tr>
                     </thead>
@@ -19,6 +20,7 @@
                         <td>{{ ticket[0] }}</td>
                         <td>{{ ticket[1] }}</td>
                         <td>{% if ticket[2] == 'null' %}{% else %}{{ticket[2]}}{% endif %}</td>
+                        <td>{% if ticket[3] == 'null' %}{% else %}{{ ticket[3] }}{% endif %}</td>
                         <td>{{ticket[4]}}</td>
                     </tbody>
                     {% endfor %}

@@ -7,6 +7,7 @@ import psycopg2
 from pyzbar.pyzbar import decode
 import numpy as np
 import time
+import datetime
 
 
 def conectar_db():
@@ -58,14 +59,23 @@ while True:
                 cursor.execute("SELECT * FROM lugar WHERE ticket='"+str(id_t)+"';")
                 ticket = cursor.fetchone()
                 print(ticket)
+                print(ticket[3])
                 print(ticket[6])
-                if(ticket[6] == False):
-                    id = ticket[0]
-                    print(id)
-                    cursor.execute("UPDATE lugar SET validado='True' WHERE id='"+str(id)+"';")
-                    cursor.execute("SELECT * FROM lugar WHERE id='"+str(id)+"';")
-                    lugar = cursor.fetchone()
-                    print(lugar)
+                if(ticket[6] == True and ticket[3] == False):
+                    _id = ticket[0]
+                    idticket = ticket[5]
+                    cursor.execute("SELECT entrada FROM ticket WHERE id='"+str(idticket)+"';")
+                    entrada = cursor.fetchone()
+                    now = datetime.datetime.now()
+                    tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido   
+                    delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z")#Transforma el string de la hora de entrada al tipo de dato datetime
+                    fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f")#Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
+                    fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
+                    fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
+                    tiempo = fecha2 - fecha1  #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+                    print(tiempo)
+                    cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
+                    cursor.execute("UPDATE lugar SET disponible=DEFAULT, ticket=null, validado=DEFAULT WHERE id='"+str(_id)+"';")
                 conexion.commit()
                 conexion.close()
                 time.sleep(2)

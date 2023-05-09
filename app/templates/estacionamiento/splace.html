@@ -59,7 +59,8 @@
                                 Estado: 
                                 {% if find[0][3] == true %}Disponible
                                     {% else %}Ocupado <br>
-                                N Ticket: {{ find[0][5] }}
+                                N Ticket: {{ find[0][5] }} <br>
+                                <img src="/qr/{{ find[0][5] }}.png" alt="qr">
                                 {% endif %}
                                  
                             {% endif %}

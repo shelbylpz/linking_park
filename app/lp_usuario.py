@@ -6,8 +6,8 @@ import random
 def conectar_db():
     conexion = psycopg2.connect(
         user = 'postgres',
-        password = 'password',
-        host = 'localhost',
+        password = '22042003-a',
+        host = 'azure-flask-dbapp.postgres.database.azure.com',
         port = '5432',
         database = 'LinkingParkDB'
     )

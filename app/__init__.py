@@ -1,18 +1,25 @@
 from QRCodes.QRGenerator import generator, generator_after_out
+from pruebasdehilos import verificar_tiempo, eliminar_qr
 import os
 from math import floor,ceil
 from flask import Flask, render_template, request, redirect, session, send_from_directory
 import psycopg2 
 import datetime
+import threading
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
 
+hilo1 = threading.Timer(5, function=verificar_tiempo)
+hilo2 = threading.Timer(10, function=eliminar_qr)
+hilo1.start()
+hilo2.start()
+
 def conectar_db():
     conexion = psycopg2.connect(
         user = 'postgres',
-        password = 'password',
-        host = 'localhost',
+        password = '22042003-a',
+        host = 'azure-flask-dbapp.postgres.database.azure.com',
         port = '5432',
         database = 'LinkingParkDB'
     )
@@ -96,11 +103,29 @@ def estacionamiento_ver_search():
         _lugar = request.form['txtSearch']
         if(_lugar == ''):
             return redirect('/estacionamiento/ver')
-        _lugar = _lugar.upper()
+        _lugar = _lugar.upper() # Para que todas las busquedas sean con mayusculas ya que no se debe tener ningun campo en minusculas
         conexion = conectar_db()
         cursor = conexion.cursor()
         cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
         find = cursor.fetchall()
+        if(find[0][3] == False):
+            idTcket = find[0][5]
+            cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+idTcket+"';")
+            entrada = cursor.fetchone()
+            if entrada[1] == 'null':
+                now = datetime.datetime.now()
+                delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z") #Transforma el string de la hora de entrada al tipo de dato datetime
+                fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f") #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
+                fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
+                fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
+                tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+                print(tiempo)
+                cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(idTcket)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
+            qrco = "./app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
+            print(qrco)
+            if(os.path.exists(qrco) == False): #Aqui se verifica si el archivo esta creado y en caso de que no se manda a generar
+                generator(_lugar)
+        conexion.commit()
         cursor.close()
         conexion.close()
         conexion = conectar_db()
@@ -154,6 +179,7 @@ def estacionamiento_ver_search():
     
 
 #Seccion buscar lugar o ticket
+
 @app.route('/estacionamiento/search')
 def estacionamiento_search():
     if not 'login' in session:
@@ -177,12 +203,17 @@ def estacionamiento_search_find():
             _lugar = _lugar.upper()
             cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
             find = cursor.fetchall()
+            qrco = "./app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
+            print(qrco)
+            if(os.path.exists(qrco) == False): # Se verifica que el archivo exista si no se genera
+                generator(_lugar)
             tipo = 'l'
         if _tipo == 'ticket':
             print('Se intento buscar ticket')
             cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+_lugar+"';")
             entrada = cursor.fetchone()
-            if entrada[1] == 'null':
+            print(entrada[1])
+            if entrada[1] is None:
                 now = datetime.datetime.now()
                 delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z") #Transforma el string de la hora de entrada al tipo de dato datetime
                 fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f") #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
@@ -191,6 +222,10 @@ def estacionamiento_search_find():
                 tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(_lugar)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
+            qrco = "./app/QRCodes/img/"+str(_lugar)+".png" # Asignamos direccion del codigo qr a variable
+            print(qrco)
+            if(os.path.exists(qrco) == False): # Verificamos que el archivo exista si no lo genera
+                generator(_lugar)
             cursor.execute("SELECT * FROM ticket WHERE id='"+_lugar+"';")
             find = cursor.fetchall()
             conexion.commit()
@@ -349,7 +384,7 @@ def configuracion_modificar_update():
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(_id)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
+        cursor.execute("UPDATE lugar SET disponible=False, validado=DEFAULT, ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
         
         generator(nticket)
     else:
@@ -365,7 +400,7 @@ def configuracion_modificar_update():
         tiempo = fecha2 - fecha1  #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
         print(tiempo)
         cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
-        cursor.execute("UPDATE lugar SET disponible='true', ticket=null WHERE id='"+str(_id)+"';")
+        cursor.execute("UPDATE lugar SET disponible='true', ticket=null, validado=DEFAULT WHERE id='"+str(_id)+"';")
    
     conexion.commit()
     conexion.close()
