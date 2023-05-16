@@ -1,19 +1,35 @@
 {% include "base.html" %}
 <br>
+<style>
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar{
+        border-radius: 5px;
+        border-color: black;
+        border-style: double;
+        
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+        font-size: medium;
+        text-align: center;
+    }
+</style>
 <div class="container">
     <div class="container-fluid">
         <div class="row" id="DividirPagina">
             <div class="col-8" style="background-color: rgb(218, 217, 217);"> <!-- Columna para Estacionamiento-->
                 <br>
                 <div class="row"> <!-- Esto es pa iniciar la fila principal-->
-                    <div class="col-8"><!--Columna espacios de estacionamiento-->
+                    <div class="col-9"><!--Columna espacios de estacionamiento-->
                         <div class="container-fluid">
                             <div class="row"><!--Seccion de Autos-->
                                 <div class="row"><!--solo contendra 10 lugares-->
                                 {% for i in range(aLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col">
-                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color:rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
                                             <p>{{ Autos[i][0] }} </p>
                                         </div>
                                     </div>
@@ -88,7 +104,7 @@
                             </div>
                             </div>
                         </div>
-                        <div class="col-4"> <!--columna entrada-->
+                        <div class="col-3"> <!--columna entrada-->
                              Entrada
                         </div>
                         </div>

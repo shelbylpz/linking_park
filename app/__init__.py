@@ -1,5 +1,5 @@
 from QRCodes.QRGenerator import generator, generator_after_out
-from pruebasdehilos import verificar_tiempo, eliminar_qr
+from hilos import verificar_tiempo, eliminar_qr
 import os
 from math import floor,ceil
 from flask import Flask, render_template, request, redirect, session, send_from_directory
@@ -59,7 +59,7 @@ def entradas_salidas():
         return redirect('/login')
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM ticket ORDER BY id;")
+    cursor.execute("SELECT * FROM ticket ORDER BY id DESC;")
     tickets = cursor.fetchall()
     conexion.commit()
     conexion.close()

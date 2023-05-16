@@ -2,6 +2,8 @@ import keyboard
 import psycopg2
 import datetime
 import random
+from QRCodes.QRGenerator import generator
+from boleto.ticket import gen_Ticket
 
 def conectar_db():
     conexion = psycopg2.connect(
@@ -19,7 +21,7 @@ def on_key_press(event):
         conexion = conectar_db()
         cursor = conexion.cursor()
         now = datetime.datetime.now()
-        hnow = now.strftime("%Y%m%d%H%M")
+        hnow = now.strftime("%Y%m%d%H%M%S")
         tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f")        
         cursor.execute("SELECT * FROM lugar WHERE seccion='A' AND disponible=True ORDER BY numero;")
         disponibles = cursor.fetchall()
@@ -33,7 +35,9 @@ def on_key_press(event):
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(asignado)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"'")
+        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
+        generator(nticket)
+        gen_Ticket(nticket)
         conexion.commit()
         print(sql)
         conexion.close()
@@ -42,7 +46,7 @@ def on_key_press(event):
         conexion = conectar_db()
         cursor = conexion.cursor()
         now = datetime.datetime.now()
-        hnow = now.strftime("%Y%m%d%H%M")
+        hnow = now.strftime("%Y%m%d%H%M%S")
         tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f")   
         cursor.execute("SELECT * FROM lugar WHERE seccion='D' AND disponible=True ORDER BY numero;")
         disponibles = cursor.fetchall()
@@ -56,7 +60,9 @@ def on_key_press(event):
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(asignado)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"'")
+        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
+        generator(nticket)
+        gen_Ticket(nticket)
         conexion.commit()
         print(sql)
         conexion.close()
@@ -65,7 +71,7 @@ def on_key_press(event):
         conexion = conectar_db()
         cursor = conexion.cursor()
         now = datetime.datetime.now()
-        hnow = now.strftime("%Y%m%d%H%M")
+        hnow = now.strftime("%Y%m%d%H%M%S")
         tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f")   
         cursor.execute("SELECT * FROM lugar WHERE seccion='M' AND disponible=True ORDER BY numero;")
         disponibles = cursor.fetchall()
@@ -79,7 +85,9 @@ def on_key_press(event):
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(asignado)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"'")
+        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
+        generator(nticket)
+        gen_Ticket(nticket)
         conexion.commit()
         print(sql)
         conexion.close()

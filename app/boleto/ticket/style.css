@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+body{
+    background-color: rgb(214,212,208);
+}
+
+.ticket{
+    font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 7px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 5px 5px 30px rgba(0,0,0,0.5);
+    padding: 10px;
+
+    position: absolute;
+    width: 270px;
+    height: 450px;
+    left:10%;
+    top:10%;
+    transform: translateX(-40%);
+}
+
+.logo img{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    left: 33px;
+    top:62px;
+}
+
+.triangulo{
+    width: 0;
+    height: 0;
+    border-right: 130px solid transparent;
+    border-top: 5px solid transparent;
+    border-left: 130px solid transparent;
+    border-bottom: 23px solid rgb(33,52,81);
+    margin-left: 10px;
+}
+
+.parkingzone{
+    position:absolute;
+    text-align: center;
+    font-weight: 900;
+    font-size: large;
+    right: 38px;
+    top:48px;
+}
+
+.recibo{
+    position: absolute;
+    text-align: center;
+    font-weight: 450;
+    letter-spacing: 0px;
+    top:27%;
+    left: 15px;
+    right: 15px;
+}
+
+.recibo hr{
+    border: 1px solid black;
+}
+
+.recibo label{
+    display:inline-block;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.informacion{
+    position: absolute;
+    top: 42%;
+    left: 15px;
+    right: 15px;
+    text-align: right;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.informacion label{
+    display: inline-block;
+    margin: 5px;
+    letter-spacing: 1px;
+}
+
+
+.fecha{
+    display: inline-block;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.qr hr{
+    border: 1px solid black;
+    margin-top: 255px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.qr img{
+    position: absolute;
+    bottom: 8%;
+    left: 29%;
+    width: 45%;
+
+}
+
+.triangulo2{
+    width: 0;
+    height: 0;
+    border-right: 130px solid transparent;
+    border-top: 5px solid transparent;
+    border-left: 130px solid transparent;
+    border-bottom: 23px solid rgb(33,52,81);
+    margin-left: 10px;
+    margin-top: 140px;
+}
