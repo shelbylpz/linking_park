@@ -1,0 +1,29 @@
+{% include 'base.html' %}
+
+<div class="p-5 bg-light">
+    <div class="container">
+        <div class="container text-center">
+            <h4>Avisos</h4>
+            <div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripcion</th>
+                            <th>Ticket</th>
+                        </tr>
+                    </thead>
+                    {% for aviso in avisos %}
+                    <tbody>
+                        <td>{{ aviso[0] }}</td>
+                        <td>{{ aviso[1] }}</td>
+                        <td>{{ aviso[2] }}</td>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'end.html' %}

@@ -5,15 +5,16 @@ from math import floor,ceil
 from flask import Flask, render_template, request, redirect, session, send_from_directory
 import psycopg2 
 import datetime
+import time
 import threading
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
 
-hilo1 = threading.Timer(5, function=verificar_tiempo)
-hilo2 = threading.Timer(10, function=eliminar_qr)
-hilo1.start()
-hilo2.start()
+#hilo1 = threading.Timer(5, function=verificar_tiempo)
+#hilo2 = threading.Timer(10, function=eliminar_qr)
+#hilo1.start()
+#hilo2.start()
 
 def conectar_db():
     conexion = psycopg2.connect(
@@ -39,7 +40,6 @@ def imagenes(imagen):
 @app.route('/qr/<qrcode>')
 def qr(qrcode):
     return send_from_directory(os.path.join('QRCodes/img'),qrcode)
-
 
 @app.route('/css/<archivocss>')
 def css_link(archivocss):
@@ -113,12 +113,7 @@ def estacionamiento_ver_search():
             cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+idTcket+"';")
             entrada = cursor.fetchone()
             if entrada[1] == 'null':
-                now = datetime.datetime.now()
-                delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z") #Transforma el string de la hora de entrada al tipo de dato datetime
-                fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f") #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
-                fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
-                fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
-                tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+                tiempo = update_time(entrada)
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(idTcket)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
             qrco = "./app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
@@ -175,8 +170,6 @@ def estacionamiento_ver_search():
         print(Motos)
         conexion.close()
     return render_template("/estacionamiento/ver.html", find='',Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje='Error')
-    
-    
 
 #Seccion buscar lugar o ticket
 
@@ -214,12 +207,7 @@ def estacionamiento_search_find():
             entrada = cursor.fetchone()
             print(entrada[1])
             if entrada[1] is None:
-                now = datetime.datetime.now()
-                delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z") #Transforma el string de la hora de entrada al tipo de dato datetime
-                fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f") #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
-                fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
-                fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
-                tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+                tiempo = update_time(entrada)
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(_lugar)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
             qrco = "./app/QRCodes/img/"+str(_lugar)+".png" # Asignamos direccion del codigo qr a variable
@@ -243,6 +231,15 @@ def estacionamiento_search_find():
     return render_template('/estacionamiento/splace.html', find='' , mensaje='ERROR')
 
 #Rutas de Notificaciones
+
+@app.route('/alertas')
+def avisos():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM avisos;")
+    avisos = cursor.fetchall()
+    print(avisos)
+    return render_template("/notificaciones/alertas.html",avisos=avisos)
 
 #Rutas de configuraciones
 @app.route('/configuracion/agregar')
@@ -392,12 +389,8 @@ def configuracion_modificar_update():
         cursor.execute("SELECT entrada FROM ticket WHERE id='"+str(idticket)+"';")
         entrada = cursor.fetchone()
         now = datetime.datetime.now()
-        tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido   
-        delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z")#Transforma el string de la hora de entrada al tipo de dato datetime
-        fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f")#Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
-        fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
-        fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
-        tiempo = fecha2 - fecha1  #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+        tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
+        tiempo = update_time(entrada=entrada)
         print(tiempo)
         cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
         cursor.execute("UPDATE lugar SET disponible='true', ticket=null, validado=DEFAULT WHERE id='"+str(_id)+"';")
@@ -405,6 +398,21 @@ def configuracion_modificar_update():
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/modificar')
+
+#Funciones modulacion
+
+def update_time(entrada):
+    now = datetime.datetime.now()
+    delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z")#Transforma el string de la hora de entrada al tipo de dato datetime
+    fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f")#Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
+    fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
+    fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
+    tiempo = fecha2 - fecha1  #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+    time_oobj = time.gmtime(tiempo.total_seconds())
+    dias = tiempo.days
+    testi = time.strftime(":%H:%M:%S",time_oobj)
+    tiempo = str(dias) + str(testi)
+    return tiempo
 
 #Rutas de Login y Logout
 @app.route("/login")

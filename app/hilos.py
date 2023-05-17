@@ -33,6 +33,11 @@ def verificar_tiempo():
                     fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
                     fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
                     tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+                    time_oobj = time.gmtime(tiempo.total_seconds())
+                    dias = tiempo.days
+                    testi = time.strftime(":%H:%M:%S",time_oobj)
+                    tiempo = str(dias) + str(testi)
+                    print(testi)
                     print(tiempo)
                     cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(ticket[0])+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
         conexion.commit()
