@@ -331,7 +331,7 @@ def configuracion_borrar_delete():
     cursor = conexion.cursor()
     
     cursor.execute("DELETE FROM lugar WHERE id='"+str(_id)+"';")
-   
+
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/borrar')

@@ -1,32 +1,88 @@
 {% include "base.html" %}
-<br>
+<style>
+    .container-fluid .row .col-8{
+        background-color: rgb(25, 25, 37);
+        border-color: rgba(255, 238, 0, 0.637);
+        border-style: solid;
+    }
+    
+    .container-fluid .row .col-8 .row .col-3{
+        border-left-color: rgb(251, 255, 0);
+        border-left-style: dashed;
+    }
+    .container-fluid .row .col-8 .row .col-3 h3{
+        text-align: center;
+        color: white;
+        margin-left: 50px;
+        padding-bottom: 25px;
+        border-left: 4px solid rgb(255, 255, 255);
+        vertical-align: middle;
+
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row{
+        padding-top: 25px;
+        padding-bottom: 25px;
+        border-bottom: 4px dashed white;
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.lugar{
+        border-right: 2px solid yellow;
+        border-top: 3px solid yellow;
+        border-left: 1px solid yellow;
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.button{
+        border-right: 2px solid yellow;
+        border-top: 3px solid yellow;
+        border-left: 1px solid yellow;
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.button form{
+        margin-top: 10px;
+        margin-left: 5px;
+        margin-bottom: 10px;
+        padding-top: 4px;
+        
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.button form button{
+        background-color: rgb(78, 255, 217);
+        color: rgb(0, 0, 0);
+        font-size: large;
+        text-align: center;
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar{
+        margin-top: 10px;
+        padding-top: 4px;
+        border-radius: 5px;
+        border-color: black;
+        border-style: double;
+        
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+        font-size: medium;
+        text-align: center;
+    }
+</style>
 <div class="container">
     <div class="container-fluid">
         <h1 style="text-align: center;">Eliminar Lugares</h1>
-        <br>
         <div class="row" id="DividirPagina">
-            <div class="col bg-light">
-                
-            </div>
-            <div class="col-8" style="background-color: rgb(218, 217, 217);"> <!-- Columna para Estacionamiento-->
+            <div class="col-8"> <!-- Columna para Estacionamiento-->
                 <br>
                 <div class="row"> <!-- Esto es pa iniciar la fila principal-->
-                    <div class="col-10"><!--Columna espacios de estacionamiento-->
+                    <div class="col-9"><!--Columna espacios de estacionamiento-->
                         <div class="container-fluid">
                             <div class="row"><!--Seccion de Autos-->
                                 <div class="row"><!--solo contendra 10 lugares-->
                                 {% for i in range(aLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     {% if i+1 == aLenght %}
-                                    <div class="col">
+                                    <div class="col button">
                                         <form action="/configuracion/borrar/delete" method="post">
                                         <input value="{{ Autos[i][0] }}" type="hidden" name="txtId" id="txtId">
-                                        <button type="submit" class="" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Autos[i][0] }}</button>
+                                        <button type="submit" class="" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>{{ Autos[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
-                                    <div class="col">
-                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color:rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>
+                                    <div class="col lugar">
+                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
                                             <p>{{ Autos[i][0] }} </p>
                                         </div>
                                     </div>
@@ -54,15 +110,15 @@
                                 {% for i in range(dLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     {% if i+1 == dLenght %}
-                                    <div class="col">
+                                    <div class="col button">
                                         <form action="/configuracion/borrar/delete" method="post">
                                         <input value="{{ Discapacitados[i][0] }}" type="hidden" name="txtId" id="txtId">
-                                        <button type="submit" class="" {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Discapacitados[i][0] }}</button>
+                                        <button type="submit" class="" {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Discapacitados[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>{{ Discapacitados[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
-                                    <div class="col">
-                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color: rgb(252, 75, 56);"{% endif %}>
+                                    <div class="col lugar">
+                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Discapacitados[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
                                             <p>{{ Discapacitados[i][0] }}</p>
                                         </div>
                                     </div>
@@ -90,16 +146,16 @@
                                 <div class="row"><!--solo contendra 10 lugares-->
                                 {% for i in range(mLenght) %}
                                     {% if i+1 == mLenght %}
-                                    <div class="col">
+                                    <div class="col button">
                                         <form action="/configuracion/borrar/delete" method="post">
                                         <input value="{{ Motos[i][0] }}" type="hidden" name="txtId" id="txtId">
-                                        <button type="submit" class="" {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>{{ Motos[i][0] }}</button>
+                                        <button type="submit" class=""  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Motos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>{{ Motos[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
                                 <!-- Inicia Preset de un lugar-->
-                                    <div class="col">
-                                        <div class="lugar"  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}>
+                                    <div class="col lugar">
+                                        <div class="lugar" {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Motos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
                                             <p>{{ Motos[i][0] }}</p>
                                         </div>
                                     </div>
@@ -124,14 +180,29 @@
                             </div>
                             </div>
                         </div>
-                        <div class="col-2"> <!--columna entrada-->
+                        <div class="col-3"> <!--columna entrada-->
                              Entrada
                         </div>
                         </div>
                         <br>
                     </div>
-            <div class="col bg-light">
-                
+            <div class="col-4 bg-light">
+                <h4>Leyenda:</h4>
+                    <hr>
+                    <div class="row">
+
+                        <div class="col-6">
+                            <p>A - Automoviles</p>
+                            <p>D - Discapacitados</p>
+                            <p>M - Motos</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="disp" style="background-color:rgb(252, 75, 56); color: white;">Ocupado</p>
+                            <p class="disp" style="background-color: rgb(2, 226, 84);">Disponible</p>
+                            <p class="disp" style="background-color:rgb(252, 190, 56);">No Validado</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
