@@ -234,12 +234,57 @@ def estacionamiento_search_find():
 
 @app.route('/alertas')
 def avisos():
+    if not 'login' in session:
+        return redirect('/login')
+    return render_template("/notificaciones/alertas.html")
+
+@app.route("/alertas/<table>")
+def avisos_seleccion(table):
+    if not 'login' in session:
+        return redirect('/login')
+    datos, tipo = datos_tipo(table)
+    print(datos)
+    return render_template("/notificaciones/alertas.html", datos=datos, tipo=tipo)
+
+def datos_tipo(table):
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM avisos;")
-    avisos = cursor.fetchall()
-    print(avisos)
-    return render_template("/notificaciones/alertas.html",avisos=avisos)
+    if table == 'avisos':
+        cursor.execute("SELECT * FROM avisos;")
+        tipo = "a"
+    elif table == 'historial':
+        cursor.execute("SELECT * FROM h_avisos;")
+        tipo = "h"
+    data = cursor.fetchall()
+    conexion.commit()
+    conexion.close()
+    return data, tipo
+
+@app.route('/alertas/informar', methods=["POST"])
+def avisos_informar():
+    if not 'login' in session:
+        return redirect('/login')
+    print("entro")
+    _id = request.form['txtID']
+    _table = request.form['txtTipo']
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM avisos WHERE id='"+str(_id)+"';")
+    datos = cursor.fetchone()
+    print(datos)
+    newid = datos[0]
+    newdescrip = datos[1]
+    newticket = datos[2]
+    now = datetime.datetime.now()
+    newtiempo = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+    print(newtiempo)
+    cursor.execute("INSERT INTO h_avisos(id,descripcion,id_ticket,fecha) VALUES ('"+str(newid)+"','"+str(newdescrip)+"','"+str(newticket)+"','"+str(newtiempo)+"')")
+    cursor.execute("DELETE FROM avisos WHERE id='"+str(_id)+"';")
+    conexion.commit()
+    conexion.close()
+    datos, tipo = datos_tipo(_table)
+    mensaje = "Alerta atendida se movio al historial con el ID:"+str(newid)
+    return render_template('/notificaciones/alertas.html', datos=datos, tipo=tipo, mensaje=mensaje)
 
 #Rutas de configuraciones
 @app.route('/configuracion/agregar')
@@ -413,6 +458,16 @@ def update_time(entrada):
     testi = time.strftime(":%H:%M:%S",time_oobj)
     tiempo = str(dias) + str(testi)
     return tiempo
+
+def datos_detalle_parking():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM detail_parking;")
+    data = cursor.fetchall()
+    print(data)
+    cursor.close()
+    conexion.close()
+    return data
 
 #Rutas de Login y Logout
 @app.route("/login")

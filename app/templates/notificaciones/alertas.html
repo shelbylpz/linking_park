@@ -1,29 +1,64 @@
 {% include 'base.html' %}
-
+{% if mensaje %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Proceso Terminado!</strong> {{ mensaje }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<br>
+{% endif %}
 <div class="p-5 bg-light">
     <div class="container">
         <div class="container text-center">
-            <h4>Avisos</h4>
-            <div>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Descripcion</th>
-                            <th>Ticket</th>
-                        </tr>
-                    </thead>
-                    {% for aviso in avisos %}
-                    <tbody>
-                        <td>{{ aviso[0] }}</td>
-                        <td>{{ aviso[1] }}</td>
-                        <td>{{ aviso[2] }}</td>
-                    </tbody>
-                    {% endfor %}
-                </table>
+            <div class="row">
+                <div id="list-example" class="list-group list-group-horizontal">
+                    <a class="list-group-item list-group-item-action" href="{% if tipo == 'a' %}#list-item-avisos{% else %}/alertas/avisos{% endif %}">Avisos</a>
+                    <a class="list-group-item list-group-item-action" href="{% if tipo == 'h' %}#list-item-historial{% else %}/alertas/historial{% endif %}">Historial</a>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead> 
+                                {% if tipo == 'a' %}
+                                <h4 id="list-item-avisos">Avisos</h4>
+                                {% endif %}
+                                {% if tipo == 'h' %}
+                                    <h4 id="list-item-historial">Historial</h4>                                    
+                                {% endif %}
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Descripcion</th>
+                                    <th>Ticket</th>
+                                    <th>{% if tipo == 'a' %}Acciones{% else %}{% if tipo == 'h' %}Fecha{% endif %}{% endif %}</th>
+                                </tr>
+                            </thead>
+                            {% for dato in datos %}
+                            <tbody>
+                                <td>{{ dato[0] }}</td>
+                                <td>{{ dato[1] }}</td>
+                                <td>{{ dato[2] }}</td>
+                                <td>
+                                   {% if tipo == 'a' %}
+                                   <form action="/alertas/informar" method="post">
+                                    <input value="{{ dato[0] }}" type="hidden" name="txtID" id="txtID">
+                                    <input value="avisos" type="hidden" name="txtTipo" id="txtTipo">
+                                    <button type="submit" class="btn btn-outline-info">Informar</button>
+                                    </form>
+                                   {% else %}{% if tipo == 'h' %}
+                                   {{dato[3]}}
+                                   {% endif %}
+                                   {% endif %}</th>
+                                </tr>
+                                </td>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 {% include 'end.html' %}

@@ -27,11 +27,12 @@ def verificar_tiempo():
             ticket = cursor.fetchone()
             print(ticket)
             if ticket[2] is None:
+                    formato = "%Y-%m-%d %H:%M:%S.%f"
                     now = datetime.datetime.now()
                     delta = datetime.datetime.strptime(str(ticket[1]), "%Y-%m-%d %H:%M:%S.%f%z") #Transforma el string de la hora de entrada al tipo de dato datetime
-                    fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f") #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
-                    fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
-                    fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
+                    fecha = delta.strftime(formato) #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
+                    fecha1 = datetime.datetime.strptime(str(fecha), formato) #Convertimos el string nuevamente a un dato tipo datetime
+                    fecha2 = datetime.datetime.strptime(str(now), formato) #Convertimos el string a un dato tipo datetime
                     tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
                     time_oobj = time.gmtime(tiempo.total_seconds())
                     dias = tiempo.days
@@ -64,5 +65,8 @@ def eliminar_qr():
                 if(os.path.exists(qrco) == True):
                     os.remove(path=qrco)
         #endFor
+        conexion.commit()
+        conexion.close()
         time.sleep(30)
     #endWhile
+

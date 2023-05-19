@@ -6,6 +6,20 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% if anL %}
+    <script>
+        setTimeout(function(){
+           window.location.reload(1);
+        },  30000);
+        </script>
+    {% else %}
+    <script>
+        setTimeout(function(){
+           window.location.reload(1);
+        },  60000);
+        </script>
+        
+    {% endif %}
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -68,7 +82,7 @@
                             aria-expanded="false">Notificaciones
                         </a>
                         <ul class="dropdown-menu" style="background-color: rgb(23, 30, 41);">
-                            <li><a class="dropdown-item" href="/alertas" >Alerta</a></li>
+                            <li><a class="dropdown-item" href="/alertas/avisos" >Alerta</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
