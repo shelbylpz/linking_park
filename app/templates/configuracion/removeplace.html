@@ -60,7 +60,17 @@
         text-align: center;
     }
 </style>
+
 <div class="container">
+    {% if mensaje %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{mensaje}}</strong>
+        <br>
+        El Lugar que desea eliminar, no puede ser eliminado porque esta siendo ocupado.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <br>
+    {% endif %}
     <div class="container-fluid">
         <h1 style="text-align: center;">Eliminar Lugares</h1>
         <div class="row" id="DividirPagina">

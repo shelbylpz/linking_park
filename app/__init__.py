@@ -11,10 +11,10 @@ import threading
 app = Flask(__name__)
 app.secret_key="thelmamada"
 
-#hilo1 = threading.Timer(5, function=verificar_tiempo)
-#hilo2 = threading.Timer(10, function=eliminar_qr)
-#hilo1.start()
-#hilo2.start()
+hilo1 = threading.Timer(5, function=verificar_tiempo)
+hilo2 = threading.Timer(10, function=eliminar_qr)
+hilo1.start()
+hilo2.start()
 
 def conectar_db():
     conexion = psycopg2.connect(
@@ -71,27 +71,7 @@ def estacionamiento_ver():
     if not 'login' in session:
         return redirect('/login')
     find=''
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
-    Autos = cursor.fetchall()
-    aLenght = len(Autos)#Saber la cantidad de registros encontrados
-    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-    print(aLenght)
-    print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
-    Discapacitados = cursor.fetchall()
-    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-    print(dLenght)
-    print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
-    Motos = cursor.fetchall()
-    mLenght = len(Motos)#Saber la cantidad de registros encontrados
-    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-    print(mLenght)
-    print(Motos)
-    conexion.close()
+    Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
     return render_template("/estacionamiento/ver.html", find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 #Busqueda de un lugar dentro de visualizar
@@ -123,52 +103,12 @@ def estacionamiento_ver_search():
         conexion.commit()
         cursor.close()
         conexion.close()
-        conexion = conectar_db()
-        cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero;")
-        Autos = cursor.fetchall()
-        aLenght = len(Autos)#Saber la cantidad de registros encontrados
-        anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-        print(aLenght)
-        print(Autos)
-        cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
-        Discapacitados = cursor.fetchall()
-        dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-        dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-        print(dLenght)
-        print(Discapacitados)
-        cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
-        Motos = cursor.fetchall()
-        mLenght = len(Motos)#Saber la cantidad de registros encontrados
-        mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-        print(mLenght)
-        print(Motos)
-        conexion.close()
+        Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
         return render_template("/estacionamiento/ver.html", find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
-        conexion = conectar_db()
-        cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero;")
-        Autos = cursor.fetchall()
-        aLenght = len(Autos)#Saber la cantidad de registros encontrados
-        anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-        print(aLenght)
-        print(Autos)
-        cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
-        Discapacitados = cursor.fetchall()
-        dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-        dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-        print(dLenght)
-        print(Discapacitados)
-        cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
-        Motos = cursor.fetchall()
-        mLenght = len(Motos)#Saber la cantidad de registros encontrados
-        mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-        print(mLenght)
-        print(Motos)
-        conexion.close()
+        Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
     return render_template("/estacionamiento/ver.html", find='',Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje='Error')
 
 #Seccion buscar lugar o ticket
@@ -291,27 +231,7 @@ def avisos_informar():
 def configuracion_agregar():
     if not 'login' in session:
         return redirect('/login')
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
-    Autos = cursor.fetchall()
-    aLenght = len(Autos)#Saber la cantidad de registros encontrados
-    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-    print(aLenght)
-    print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
-    Discapacitados = cursor.fetchall()
-    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-    print(dLenght)
-    print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
-    Motos = cursor.fetchall()
-    mLenght = len(Motos)#Saber la cantidad de registros encontrados
-    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-    print(mLenght)
-    print(Motos)
-    conexion.close()
+    Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
     return render_template("/configuracion/addplace.html",Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 @app.route('/configuracion/agregar/add', methods=['POST'])
@@ -344,28 +264,10 @@ def configuracion_agregar_add():
 def configuracion_borrar():
     if not 'login' in session:
         return redirect('/login')
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
-    Autos = cursor.fetchall()
-    aLenght = len(Autos)#Saber la cantidad de registros encontrados
-    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-    print(aLenght)
-    print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
-    Discapacitados = cursor.fetchall()
-    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-    print(dLenght)
-    print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
-    Motos = cursor.fetchall()
-    mLenght = len(Motos)#Saber la cantidad de registros encontrados
-    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-    print(mLenght)
-    print(Motos)
-    conexion.close()
+    Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
     return render_template('/configuracion/removeplace.html', Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+
+
 
 @app.route('/configuracion/borrar/delete', methods=['POST'])
 def configuracion_borrar_delete():
@@ -374,9 +276,17 @@ def configuracion_borrar_delete():
     _id = request.form['txtId']
     conexion = conectar_db()
     cursor = conexion.cursor()
-    
+    cursor.execute("SELECT * FROM lugar WHERE id='"+str(_id)+"';")
+    data = cursor.fetchone()
+    print(data)
+    if (data[3] == False):
+        print("No se puede mijo")
+        conexion.commit()
+        conexion.close()
+        Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
+        return render_template('/configuracion/removeplace.html', Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje="ERROR!")
+        
     cursor.execute("DELETE FROM lugar WHERE id='"+str(_id)+"';")
-
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/borrar')
@@ -385,27 +295,7 @@ def configuracion_borrar_delete():
 def configuracion_modificar():
     if not 'login' in session:
         return redirect('/login')
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
-    Autos = cursor.fetchall()
-    aLenght = len(Autos)#Saber la cantidad de registros encontrados
-    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-    print(aLenght)
-    print(Autos)
-    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
-    Discapacitados = cursor.fetchall()
-    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-    print(dLenght)
-    print(Discapacitados)
-    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
-    Motos = cursor.fetchall()
-    mLenght = len(Motos)#Saber la cantidad de registros encontrados
-    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-    print(mLenght)
-    print(Motos)
-    conexion.close()
+    Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
     return render_template('/configuracion/modplace.html' ,  Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 @app.route('/configuracion/modificar/update', methods=['POST'])
@@ -420,7 +310,7 @@ def configuracion_modificar_update():
     find = cursor.fetchone()
     if find[3] == True:
         now = datetime.datetime.now()
-        hnow = now.strftime("%Y%m%d%H%M")
+        hnow = now.strftime("%Y%m%d%H%M%S")
         tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f")
         nticket = str(hnow)+"-"+str(_id)
         print(hnow)
@@ -468,6 +358,30 @@ def datos_detalle_parking():
     cursor.close()
     conexion.close()
     return data
+
+def data_for_view_parking(): #Obtiene todos los datos necesarios para poder crear la visualizacion del estacionamiento
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
+    Autos = cursor.fetchall()
+    aLenght = len(Autos)#Saber la cantidad de registros encontrados
+    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
+    print(aLenght)
+    print(Autos)
+    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
+    Discapacitados = cursor.fetchall()
+    dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
+    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
+    print(dLenght)
+    print(Discapacitados)
+    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
+    Motos = cursor.fetchall()
+    mLenght = len(Motos)#Saber la cantidad de registros encontrados
+    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
+    print(mLenght)
+    print(Motos)
+    conexion.close()
+    return Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL 
 
 #Rutas de Login y Logout
 @app.route("/login")
