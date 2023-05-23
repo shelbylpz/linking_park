@@ -37,7 +37,8 @@ def imagenes(imagen):
 
 @app.route('/qr/<qrcode>')
 def qr(qrcode):
-    return send_from_directory(os.path.join('QRCodes/img'),qrcode)
+    path_qr = str(route) + r'QRCodes/img'
+    return send_from_directory(os.path.join(path_qr),qrcode)
 
 @app.route('/css/<archivocss>')
 def css_link(archivocss):
@@ -94,7 +95,7 @@ def estacionamiento_ver_search():
                 tiempo = update_time(entrada)
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(idTcket)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
-            qrco = "./app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
+            qrco = str(route)+"/app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
             print(qrco)
             if(os.path.exists(qrco) == False): #Aqui se verifica si el archivo esta creado y en caso de que no se manda a generar
                 generator(_lugar)
@@ -134,7 +135,7 @@ def estacionamiento_search_find():
             _lugar = _lugar.upper()
             cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
             find = cursor.fetchall()
-            qrco = "./app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
+            qrco = str(route)+"/app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
             print(qrco)
             if(os.path.exists(qrco) == False): # Se verifica que el archivo exista si no se genera
                 generator(_lugar)
@@ -148,7 +149,7 @@ def estacionamiento_search_find():
                 tiempo = update_time(entrada)
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(_lugar)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
-            qrco = "./app/QRCodes/img/"+str(_lugar)+".png" # Asignamos direccion del codigo qr a variable
+            qrco = str(route)+"/app/QRCodes/img/"+str(_lugar)+".png" # Asignamos direccion del codigo qr a variable
             print(qrco)
             if(os.path.exists(qrco) == False): # Verificamos que el archivo exista si no lo genera
                 generator(_lugar)

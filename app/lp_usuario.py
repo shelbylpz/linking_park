@@ -2,6 +2,7 @@ import keyboard
 import psycopg2
 import datetime
 import random
+import tkinter
 from QRCodes.QRGenerator import generator
 from boleto.ticket import gen_Ticket
 

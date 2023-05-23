@@ -1,20 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
-body{
-    background-color: rgb(214,212,208);
-}
+
 
 .ticket{
     font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 7px;
     background-color: rgb(255, 255, 255);
-    box-shadow: 5px 5px 30px rgba(0,0,0,0.5);
+    border: 2px solid black;
     padding: 10px;
 
     position: absolute;
     width: 270px;
     height: 450px;
-    left:10%;
+    left:15%;
     top:10%;
     transform: translateX(-40%);
 }
