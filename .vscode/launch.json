@@ -11,12 +11,14 @@
             "module": "flask",
             "env": {
                 "FLASK_APP": "startup:app",
+                "FLASK_ENV": "development",
                 "FLASK_DEBUG": "1"
             },
             "args": [
                 "run",
                 "--no-debugger",
-                "--no-reload"
+                "--no-reload",
+                "--with-threads"
             ],
             "jinja": true,
             "justMyCode": true

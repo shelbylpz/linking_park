@@ -1,20 +1,18 @@
-from QRCodes.QRGenerator import generator, generator_after_out
-from hilos import verificar_tiempo, eliminar_qr
-import os
+import os, shutil
 from math import floor,ceil
 from flask import Flask, render_template, request, redirect, session, send_from_directory
 import psycopg2 
 import datetime
 import time
 import threading
+import pyqrcode
+import png
+from pyqrcode import QRCode
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
 
-hilo1 = threading.Timer(5, function=verificar_tiempo)
-hilo2 = threading.Timer(10, function=eliminar_qr)
-hilo1.start()
-hilo2.start()
+
 
 def conectar_db():
     conexion = psycopg2.connect(
@@ -267,8 +265,6 @@ def configuracion_borrar():
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
     return render_template('/configuracion/removeplace.html', Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
-
-
 @app.route('/configuracion/borrar/delete', methods=['POST'])
 def configuracion_borrar_delete():
     if not 'login' in session:
@@ -383,6 +379,72 @@ def data_for_view_parking(): #Obtiene todos los datos necesarios para poder crea
     conexion.close()
     return Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL 
 
+route = os.path.abspath(os.getcwd())
+
+def generator(id):
+    qr = pyqrcode.create(str(id), error='L')
+    qr.png(str(id)+'.png', scale = 6)
+    shutil.move(str(route)+'/'+str(id)+'.png',str(route)+'/app/QRCodes/img/')
+    
+#Hilos
+def verificar_tiempo():
+    while True:
+        conexion = conectar_db()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT ticket FROM lugar WHERE disponible=False")
+        ocupados = cursor.fetchall()
+        cantidad = len(ocupados)
+        print(cantidad)
+        print(ocupados)
+        for ocupado in ocupados:
+            cursor.execute("SELECT * FROM ticket WHERE id='"+str(ocupado[0])+"'")
+            ticket = cursor.fetchone()
+            print(ticket)
+            if ticket[2] is None:
+                    formato = "%Y-%m-%d %H:%M:%S.%f"
+                    now = datetime.datetime.now()
+                    delta = datetime.datetime.strptime(str(ticket[1]), "%Y-%m-%d %H:%M:%S.%f%z") #Transforma el string de la hora de entrada al tipo de dato datetime
+                    fecha = delta.strftime(formato) #Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
+                    fecha1 = datetime.datetime.strptime(str(fecha), formato) #Convertimos el string nuevamente a un dato tipo datetime
+                    fecha2 = datetime.datetime.strptime(str(now), formato) #Convertimos el string a un dato tipo datetime
+                    tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+                    time_oobj = time.gmtime(tiempo.total_seconds())
+                    dias = tiempo.days
+                    testi = time.strftime(":%H:%M:%S",time_oobj)
+                    tiempo = str(dias) + str(testi)
+                    print(testi)
+                    print(tiempo)
+                    cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(ticket[0])+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
+        conexion.commit()
+        conexion.close()
+        time.sleep(60)
+
+
+def eliminar_qr():
+    while True:
+        conexion = conectar_db()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT ticket FROM lugar WHERE disponible=False;")
+        ocupados = cursor.fetchall()
+        cursor.execute("SELECT id FROM ticket;")
+        tickets = cursor.fetchall()
+        for ticket in tickets:
+            necesario = False
+            for ocupado in ocupados:
+                if ocupado[0] == ticket[0]:
+                    necesario = True
+            #endFor
+            if necesario is False:
+                qrco = "./app/QRCodes/img/"+ticket[0]+".png"
+                if(os.path.exists(qrco) == True):
+                    os.remove(path=qrco)
+        #endFor
+        conexion.commit()
+        conexion.close()
+        time.sleep(30)
+    #endWhile
+
+
 #Rutas de Login y Logout
 @app.route("/login")
 def login():
@@ -408,6 +470,12 @@ def login_post():
 def logout():
     session.clear()
     return redirect("/login")
+
+#hilos
+hilo1 = threading.Timer(5, function=verificar_tiempo)
+hilo2 = threading.Timer(10, function=eliminar_qr)
+hilo1.start()
+hilo2.start()
 
 if __name__ == '__main__':
     app.run(debug=True)
