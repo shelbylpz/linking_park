@@ -28,7 +28,9 @@ def conectar_db():
 def index():
     if not 'login' in session:
         return redirect('/login')
-    return render_template("index.html")
+    n_avisos = verificar_nalertas()
+    print(n_avisos)
+    return render_template("index.html", n_avisos=n_avisos)
 #Obtencion de imagen o CSS personalizado
 @app.route('/img/<imagen>')
 def imagenes(imagen):
@@ -48,35 +50,39 @@ def css_link(archivocss):
 def estacionamiento():
     if not 'login' in session:
         return redirect('/login')
-    return render_template("estacionamiento.html")
+    n_avisos = verificar_nalertas()
+    return render_template("estacionamiento.html", n_avisos=n_avisos)
 
 #Entradas y salidas
 @app.route("/estacionamiento/inout")
 def entradas_salidas():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     conexion = conectar_db()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM ticket ORDER BY id DESC;")
     tickets = cursor.fetchall()
     conexion.commit()
     conexion.close()
-    return render_template("/estacionamiento/inout.html", tickets=tickets)
+    return render_template("/estacionamiento/inout.html", tickets=tickets, n_avisos=n_avisos)
 
 #Seccion de visualizar el estacionamiento
 @app.route('/estacionamiento/ver')
 def estacionamiento_ver():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     find=''
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template("/estacionamiento/ver.html", find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template("/estacionamiento/ver.html",  n_avisos=n_avisos, find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 #Busqueda de un lugar dentro de visualizar
 @app.route('/estacionamiento/ver/search', methods=["POST"])
 def estacionamiento_ver_search():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     try:
         _lugar = request.form['txtSearch']
         if(_lugar == ''):
@@ -96,18 +102,20 @@ def estacionamiento_ver_search():
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(idTcket)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
             qrco = str(route)+"/app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
             print(qrco)
-            if(os.path.exists(qrco) == False): #Aqui se verifica si el archivo esta creado y en caso de que no se manda a generar
+            try:
                 generator(_lugar)
+            except (Exception):
+                print("Ya existe QR")
         conexion.commit()
         cursor.close()
         conexion.close()
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-        return render_template("/estacionamiento/ver.html", find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+        return render_template("/estacionamiento/ver.html",n_avisos=n_avisos, find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template("/estacionamiento/ver.html", find='',Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje='Error')
+    return render_template("/estacionamiento/ver.html",n_avisos=n_avisos, find='',Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje='Error')
 
 #Seccion buscar lugar o ticket
 
@@ -115,14 +123,17 @@ def estacionamiento_ver_search():
 def estacionamiento_search():
     if not 'login' in session:
         return redirect('/login')
+    
+    n_avisos = verificar_nalertas()
     find = ''
     tipo = ''
-    return render_template('/estacionamiento/splace.html', find=find, tipo=tipo)
+    return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find=find, tipo=tipo)
 
 @app.route('/estacionamiento/search/find', methods=['POST'])
 def estacionamiento_search_find():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     try:
         _lugar = request.form['txtSearch']
         _tipo = request.form['tipo']
@@ -160,7 +171,7 @@ def estacionamiento_search_find():
             conexion.close()
             tipo = 't'
         print(find)
-        return render_template('/estacionamiento/splace.html', find=find, tipo=tipo)
+        return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find=find, tipo=tipo)
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -168,7 +179,7 @@ def estacionamiento_search_find():
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/estacionamiento/splace.html', find='' , mensaje='ERROR')
+    return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find='' , mensaje='ERROR')
 
 #Rutas de Notificaciones
 
@@ -176,15 +187,17 @@ def estacionamiento_search_find():
 def avisos():
     if not 'login' in session:
         return redirect('/login')
-    return render_template("/notificaciones/alertas.html")
+    n_avisos = verificar_nalertas()
+    return render_template("/notificaciones/alertas.html", n_avisos=n_avisos)
 
 @app.route("/alertas/<table>")
 def avisos_seleccion(table):
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     datos, tipo = datos_tipo(table)
     print(datos)
-    return render_template("/notificaciones/alertas.html", datos=datos, tipo=tipo)
+    return render_template("/notificaciones/alertas.html",n_avisos=n_avisos, datos=datos, tipo=tipo)
 
 def datos_tipo(table):
     conexion = conectar_db()
@@ -204,6 +217,7 @@ def datos_tipo(table):
 def avisos_informar():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     print("entro")
     _id = request.form['txtID']
     _table = request.form['txtTipo']
@@ -224,15 +238,16 @@ def avisos_informar():
     conexion.close()
     datos, tipo = datos_tipo(_table)
     mensaje = "Alerta atendida se movio al historial con el ID:"+str(newid)
-    return render_template('/notificaciones/alertas.html', datos=datos, tipo=tipo, mensaje=mensaje)
+    return render_template('/notificaciones/alertas.html',n_avisos=n_avisos, datos=datos, tipo=tipo, mensaje=mensaje)
 
 #Rutas de configuraciones
 @app.route('/configuracion/agregar')
 def configuracion_agregar():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template("/configuracion/addplace.html",Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template("/configuracion/addplace.html",n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 @app.route('/configuracion/agregar/add', methods=['POST'])
 def configuracion_agregar_add():
@@ -264,8 +279,9 @@ def configuracion_agregar_add():
 def configuracion_borrar():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template('/configuracion/removeplace.html', Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 @app.route('/configuracion/borrar/delete', methods=['POST'])
 def configuracion_borrar_delete():
@@ -281,8 +297,9 @@ def configuracion_borrar_delete():
         print("No se puede mijo")
         conexion.commit()
         conexion.close()
+        n_avisos = verificar_nalertas()
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-        return render_template('/configuracion/removeplace.html', Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje="ERROR!")
+        return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje="ERROR!")
         
     cursor.execute("DELETE FROM lugar WHERE id='"+str(_id)+"';")
     conexion.commit()
@@ -293,8 +310,10 @@ def configuracion_borrar_delete():
 def configuracion_modificar():
     if not 'login' in session:
         return redirect('/login')
+    n_avisos = verificar_nalertas()
+    print()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template('/configuracion/modplace.html' ,  Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template('/configuracion/modplace.html', n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
 
 @app.route('/configuracion/modificar/update', methods=['POST'])
 def configuracion_modificar_update():
@@ -387,6 +406,16 @@ def generator(id):
     qr = pyqrcode.create(str(id), error='L')
     qr.png(str(id)+'.png', scale = 6)
     shutil.move(str(route)+'/'+str(id)+'.png',str(route)+'/app/QRCodes/img/')
+
+def verificar_nalertas():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM avisos;")
+    avisos = cursor.fetchall()
+    n_avisos = len(avisos)
+    print("numero de aviso: "+str(n_avisos))
+    return n_avisos
+
     
 #Hilos
 def verificar_tiempo():

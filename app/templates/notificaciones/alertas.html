@@ -6,7 +6,15 @@
   </div>
 <br>
 {% endif %}
-<div class="p-5 bg-light">
+<style>
+    .p-5 .container .container .table{
+        border: 1px solid black;
+    }
+    .p-5 .container .container .table thead{
+        background-color: rgb(255, 213, 0);
+    }
+</style>
+<div class="p-5">
     <div class="container">
         <div class="container text-center">
             <div class="row">
@@ -44,7 +52,7 @@
                                    <form action="/alertas/informar" method="post">
                                     <input value="{{ dato[0] }}" type="hidden" name="txtID" id="txtID">
                                     <input value="avisos" type="hidden" name="txtTipo" id="txtTipo">
-                                    <button type="submit" class="btn btn-outline-info">Informar</button>
+                                    <button type="submit" class="btn btn-info">Informar</button>
                                     </form>
                                    {% else %}{% if tipo == 'h' %}
                                    {{dato[3]}}

@@ -11,53 +11,35 @@
     .lista{
         list-style-type: none;
     }
+    .container .row .container .btn{
+        margin: 10px;
+        padding: 15px;
+        
+    }
 </style>
 <div class="container">
-
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card text-bg-light border-dark mb-3" style="max-width: 18rem;">
-                <div class="card-header"><a href="/estacionamiento/">Estacionamiento</a></div>
-                <div class="card-body">
-                    <ul>
-                        <li class="lista">
-                            <a href="/estacionamiento/inout">Entradas / Salidas</a>
-                        </li>
-                        <li class="lista">
-                            <a href="/estacionamiento/ver">Visualizar Estacionamiento</a>
-                        </li>
-                        <li class="lista">
-                            <a href="/estacionamiento/search">Buscar lugar / ticket</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <div class="row">
+        <h2>Estacionamiento</h2>
+        <div class="container">
+            <a href="/estacionamiento/inout" class="btn btn-warning">Entradas / Salidas</a>
+            <a href="/estacionamiento/ver" class="btn btn-warning">Visualizar Estacionamiento</a>
+            <a href="/estacionamiento/search" class="btn btn-warning">Buscar lugar / ticket</a>
         </div>
-        <div class="col">
-            <div class="card text-bg-light border-dark mb-3" style="max-width: 18rem;">
-                <div class="card-header">Notificaciones</div>
-                <div class="card-body">
-                    <ul>
-                        <li class="lista">
-                            <a href="/alertas/avisos">Alertas</a>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
+    </div>
+    <div class="row">
+        <h2>Notificaciones</h2>
+        <div class="container">
+            <a class="btn btn-warning" href="/alertas/avisos">
+                Alertas <span class="badge text-bg-secondary">{{ n_avisos }}</span>
+            </a>
         </div>
-        <div class="col">
-            <div class="card text-bg-light border-dark mb-3" style="max-width: 18rem;">
-                <div class="card-header">Configuracion</div>
-                <div class="card-body">
-                    <ul>
-                        <li class="lista"><a href="/configuracion/agregar">Agregar lugar</a></li>
-                        <li class="lista"><a href="/configuracion/borrar">Eliminar lugar</a></li>
-                        <li class="lista"><a href="/configuracion/modificar">Modificar lugar</a></li>
-                    </ul>
-
-                </div>
-            </div>
+    </div>
+    <div class="row">
+        <h2>Configuracion</h2>
+        <div class="container">
+            <a href="/configuracion/agregar" class="btn btn-warning">Agregar lugar</a>
+            <a href="/configuracion/borrar" class="btn btn-warning">Eliminar lugar</a>
+            <a href="/configuracion/modificar" class="btn btn-warning">Modificar lugar</a>
         </div>
     </div>
 </div>

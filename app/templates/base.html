@@ -6,17 +6,17 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    {% if anL %}
+    {% if Autos %}
     <script>
         setTimeout(function(){
            window.location.reload(1);
-        },  30000);
+        },  10000);
         </script>
     {% else %}
     <script>
         setTimeout(function(){
            window.location.reload(1);
-        },  60000);
+        },  30000);
         </script>
         
     {% endif %}
@@ -29,6 +29,9 @@
 
 <body>
     <style>
+        body {
+        background-color: rgb(222, 222, 222);
+    }
         .container-fluid a {
             text-decoration: none;
             color: white;
@@ -83,6 +86,7 @@
                         </a>
                         <ul class="dropdown-menu" style="background-color: rgb(23, 30, 41);">
                             <li><a class="dropdown-item" href="/alertas/avisos" >Alerta</a></li>
+                            <li><a class="dropdown-item" href="/alertas/historial" >Historial</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -97,6 +101,9 @@
                     </li>
                 </ul>
                 <div class="out">
+                    <a class="btn btn-outline-warning" href="/alertas/avisos">
+                        Alertas <span class="badge text-bg-secondary">{{n_avisos}}</span>
+                    </a>
                     <a class="btn btn-outline-warning" href="/LogOut" role="button">Log Out</a>
                 </div>
             </div>
