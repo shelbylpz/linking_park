@@ -37,8 +37,7 @@ def imagenes(imagen):
 
 @app.route('/qr/<qrcode>')
 def qr(qrcode):
-    path_qr = str(route) + r'QRCodes/img'
-    return send_from_directory(os.path.join(path_qr),qrcode)
+    return send_from_directory(os.path.join("QRCodes/img"),qrcode)
 
 @app.route('/css/<archivocss>')
 def css_link(archivocss):
@@ -135,10 +134,12 @@ def estacionamiento_search_find():
             _lugar = _lugar.upper()
             cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
             find = cursor.fetchall()
-            qrco = str(route)+"/app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
-            print(qrco)
-            if(os.path.exists(qrco) == False): # Se verifica que el archivo exista si no se genera
-                generator(_lugar)
+            print(find)
+            if (find[0][3] == False):
+                qrco = str(route)+"/app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
+                print(qrco)
+                if(os.path.exists(qrco) == False): # Se verifica que el archivo exista si no se genera
+                    generator(_lugar)
             tipo = 'l'
         if _tipo == 'ticket':
             print('Se intento buscar ticket')
