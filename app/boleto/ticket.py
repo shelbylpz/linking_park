@@ -36,6 +36,7 @@ def gen_Ticket(id):
     output_text = template.render(context)
 
     pdfkit.from_string(output_text, output_path='app/boleto/ticket/ticket.pdf', configuration=config, css='app\\boleto\\ticket\style.css', options={"enable-local-file-access":""})
+    
 
 def imprimirboleto():
     printer = printfactory.Printer()

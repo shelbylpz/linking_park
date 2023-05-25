@@ -94,16 +94,18 @@ def estacionamiento_ver_search():
         find = cursor.fetchall()
         if(find[0][3] == False):
             idTcket = find[0][5]
+            print(idTcket)
             cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+idTcket+"';")
             entrada = cursor.fetchone()
             if entrada[1] == 'null':
                 tiempo = update_time(entrada)
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(idTcket)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
-            qrco = str(route)+"/app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
+            qrco = "./app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
             print(qrco)
             try:
-                generator(_lugar)
+                if(os.path.exists(qrco) == False):
+                        generator(idTcket)
             except (Exception):
                 print("Ya existe QR")
         conexion.commit()
@@ -150,7 +152,7 @@ def estacionamiento_search_find():
                 qrco = str(route)+"/app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
                 print(qrco)
                 if(os.path.exists(qrco) == False): # Se verifica que el archivo exista si no se genera
-                    generator(_lugar)
+                    generator(find[0][5])
             tipo = 'l'
         if _tipo == 'ticket':
             print('Se intento buscar ticket')
@@ -371,7 +373,6 @@ def datos_detalle_parking():
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM detail_parking;")
     data = cursor.fetchall()
-    print(data)
     cursor.close()
     conexion.close()
     return data
@@ -382,21 +383,15 @@ def data_for_view_parking(): #Obtiene todos los datos necesarios para poder crea
     cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
     Autos = cursor.fetchall()
     aLenght = len(Autos)#Saber la cantidad de registros encontrados
-    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0
-    print(aLenght)
-    print(Autos)
+    anL = floor(aLenght/10) #Cuantas lineas son empezando en 0\
     cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
     Discapacitados = cursor.fetchall()
     dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
-    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0
-    print(dLenght)
-    print(Discapacitados)
+    dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0\
     cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
     Motos = cursor.fetchall()
     mLenght = len(Motos)#Saber la cantidad de registros encontrados
-    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0
-    print(mLenght)
-    print(Motos)
+    mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0\
     conexion.close()
     return Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL 
 
@@ -424,13 +419,10 @@ def verificar_tiempo():
         cursor = conexion.cursor()
         cursor.execute("SELECT ticket FROM lugar WHERE disponible=False")
         ocupados = cursor.fetchall()
-        cantidad = len(ocupados)
-        print(cantidad)
-        print(ocupados)
         for ocupado in ocupados:
             cursor.execute("SELECT * FROM ticket WHERE id='"+str(ocupado[0])+"'")
             ticket = cursor.fetchone()
-            print(ticket)
+            
             if ticket[2] is None:
                 formato = "%Y-%m-%d %H:%M:%S.%f"
                 now = datetime.datetime.now()
@@ -439,22 +431,17 @@ def verificar_tiempo():
                 fecha1 = datetime.datetime.strptime(str(fecha), formato) #Convertimos el string nuevamente a un dato tipo datetime
                 fecha2 = datetime.datetime.strptime(str(now), formato) #Convertimos el string a un dato tipo datetime
                 tiempo = fecha2 - fecha1 #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
-                print(tiempo)
+                
                 time_delta = datetime.timedelta(days=1, seconds=43200)
-                print(time_delta)
                 if (tiempo > time_delta):
                     cursor.execute("SELECT COUNT(*) FROM avisos WHERE id_ticket = '"+str(ticket[0])+"';")
                     n = cursor.fetchone()
-                    print(n)
                     if (n[0] == 0):
-                        print("Jalo esta wea")
                         cursor.execute("INSERT INTO avisos VALUES (DEFAULT,'"+str(ticket[4])+" ha excedido el tiempo limite', '"+str(ticket[0])+"');")
                 time_oobj = time.gmtime(tiempo.total_seconds())
                 dias = tiempo.days
                 testi = time.strftime(":%H:%M:%S",time_oobj)
                 tiempo = str(dias) + str(testi)
-                print(testi)
-                print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(ticket[0])+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
         conexion.commit()
         conexion.close()
@@ -474,6 +461,9 @@ def eliminar_qr():
             for ocupado in ocupados:
                 if ocupado[0] == ticket[0]:
                     necesario = True
+                    qrco = "./app/QRCodes/img/"+ticket[0]+".png"
+                    if(os.path.exists(qrco) == False):
+                        generator(ticket[0])
             #endFor
             if necesario is False:
                 qrco = "./app/QRCodes/img/"+ticket[0]+".png"

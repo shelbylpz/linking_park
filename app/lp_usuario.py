@@ -3,7 +3,7 @@ import psycopg2
 import datetime
 import random
 from QRCodes.QRGenerator import generator
-from boleto.ticket import gen_Ticket
+from boleto.ticket import gen_Ticket, imprimirboleto
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
