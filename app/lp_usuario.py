@@ -114,30 +114,33 @@ keyboard.on_press(on_key_press)
 # Mantener el programa en ejecución
 
 root = Tk()
-root.title('THE PARKING ZONE')
+root.title('LINKING PARK')
 root.iconbitmap('app\\templates\\img\\icono.ico')
 root.resizable(False, False)
-root.config(width=720, height=300)
+root.config(width=650, height=300)
 
 # --------------------Header--------------------
 header = Label(root, text='')
 header.config(bg='#080F1B', width=1200, height=6)
 header.place(x=0, y=0)
 
+bienvenida = Label(root, bg='#080F1B', text='Bienvenido al estacionamiento' ,fg='white',  font=('Helvetica', 25, 'bold'))
+bienvenida.place(x=150, y=25)
+
 logoImagen = PhotoImage(file='app\\templates\\img\\logo-test.gif')
 labelImagen = Label(root, image=logoImagen)
 labelImagen.config(width=100, height=85, bg='black')
-labelImagen.place(x=50, y=5)
+labelImagen.place(x=10, y=5)
 
 # --------------------Body----------------------
 botonDiscapacitado = Button(root, padx=10, fg='black', bg='#C3E0FC', font=('Helvetica', 30, 'bold'), text='Discapacitado', command=lambda: boletos('d'))
-botonDiscapacitado.place(x=10, y=155)
+botonDiscapacitado.place(x=160, y=155)
 
-botonNormal = Button(root, padx=10, fg='black', bg='#FDFF8E', font=('Helvetica', 30, 'bold'), text='Normal', command=lambda: boletos('a'))
-botonNormal.place(x=350, y=155)
+botonNormal = Button(root, padx=10, fg='black', bg='#FDFF8E', font=('Helvetica', 30, 'bold'), text='Auto', command=lambda: boletos('a'))
+botonNormal.place(x=10, y=155)
 
 botonMoto = Button(root, padx=10, fg='black', bg='#FDFF8E', font=('Helvetica', 30, 'bold'), text='Moto', command=lambda: boletos('m'))
-botonMoto.place(x=570, y=155)
+botonMoto.place(x=490, y=155)
 
 root.mainloop()
 while True:
