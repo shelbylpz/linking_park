@@ -9,15 +9,6 @@ from tkinter import messagebox
 from tkinter import ttk
 from _tkinter import TclError
 
-def conectar_db():
-    conexion = psycopg2.connect(
-        user = 'postgres',
-        password = '22042003-a',
-        host = 'azure-flask-dbapp.postgres.database.azure.com',
-        port = '5432',
-        database = 'LinkingParkDB'
-    )
-    return conexion
 
 
 
