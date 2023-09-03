@@ -8,6 +8,7 @@ import threading
 import pyqrcode
 import png
 from pyqrcode import QRCode
+from connect import conectar_db
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
