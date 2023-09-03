@@ -8,7 +8,7 @@ from pyzbar.pyzbar import decode
 import numpy as np
 import time
 import datetime
-
+from app.connect import conectar_db
 
 
 

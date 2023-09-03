@@ -7,7 +7,7 @@ import psycopg2
 from pyzbar.pyzbar import decode
 import numpy as np
 import time
-
+from app.connect import conectar_db
 
 
 
