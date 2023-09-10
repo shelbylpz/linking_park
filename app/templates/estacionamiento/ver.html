@@ -53,18 +53,37 @@
         .col-4{
             align-items: center;
         }
+        .container-fluid{
+            padding-left: 30%;
+            padding-right: 0px;
+        }
+        .searchbar{
+            width: 220px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+        .autos{
+            padding-left: 10px;
+        }
+
+        .card{
+            flex-shrink: 0;
+            width: 200px;
+        }
     }
+
    
 </style>
+<h1 style="text-align: center;">Visualizar estacionamiento</h1>
 <div class="container">
     <div class="container-fluid">
-        <h1 style="text-align: center;">Visualizar estacionamiento</h1>
+        
         <br>
         <div class="row" id="DividirPagina">
             <div class="col-8"> <!-- Columna para Estacionamiento-->
                 <div class="row"> <!-- Esto es pa iniciar la fila principal-->
                     <div class="col-9"><!--Columna espacios de estacionamiento-->
-                        <div class="container-fluid">
+                        <div class="container-fluid autos">
                             <div class="row"><!--Seccion de Autos-->
                                 <div class="row"><!--solo contendra 10 lugares-->
                                 {% for i in range(aLenght) %}
@@ -183,7 +202,7 @@
             </div>
               
             {% endif %}
-                <div class="container">
+                <div class="container searchbar">
                     <form action="/estacionamiento/ver/search" method="post" class="d-flex" role="search">
                         <input name="txtSearch" id="txtSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
