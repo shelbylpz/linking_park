@@ -42,6 +42,19 @@
         font-size: medium;
         text-align: center;
     }
+    
+    @media screen and (max-width: 1200px) {
+        .row{
+            flex-direction: column;
+        }
+        .col-3{
+            align-items: end;
+        }
+        .col-4{
+            align-items: center;
+        }
+    }
+   
 </style>
 <div class="container">
     <div class="container-fluid">
@@ -213,12 +226,12 @@
                         <hr>
                         <div class="row">
 
-                            <div class="col-4">
+                            <div class="col-5">
                                 <p>A - Automoviles</p>
                                 <p>D - Discapacitados</p>
                                 <p>M - Motos</p>
                             </div>
-                            <div class="col-4">
+                            <div class="col-5">
                                 <p class="disp" style="background-color:rgb(252, 75, 56); color: white;">Ocupado</p>
                                 <p class="disp" style="background-color: rgb(2, 226, 84);">Disponible</p>
                                 <p class="disp" style="background-color:rgb(252, 190, 56);">No Validado</p>
