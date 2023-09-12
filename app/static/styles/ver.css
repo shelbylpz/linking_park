@@ -54,6 +54,20 @@
     text-align: center;
 }
 
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+    font-size: medium;
+    text-align: center;
+}
+.lugar.disponible {
+    background-color: rgb(2, 226, 84);  
+}
+.lugar.asignado {
+    background-color:rgb(252, 75, 56);
+}
+.lugar.no-verficado {
+    background-color:rgb(252, 190, 56);
+}
+
 @media screen and (max-width: 1200px) {
     .row{
         flex-direction: column;
