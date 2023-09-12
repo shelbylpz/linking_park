@@ -51,6 +51,40 @@
     .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.no-verficado {
         background-color:rgb(252, 190, 56);
     }
+
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+        font-size: medium;
+        text-align: center;
+    }
+    
+    @media screen and (max-width: 1200px) {
+        .row{
+            flex-direction: column;
+        }
+        .col-3{
+            align-items: end;
+        }
+        .col-4{
+            align-items: center;
+        }
+        .container-fluid{
+            padding-left: 30%;
+            padding-right: 0px;
+        }
+        .searchbar{
+            width: 220px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+        .autos{
+            padding-left: 10px;
+        }
+
+        .card{
+            flex-shrink: 0;
+            width: 200px;
+        }
+    }
 </style>
 <div class="container">
     <div class="container-fluid">
