@@ -1,0 +1,68 @@
+.container-fluid .row .col-8{
+    background-color: rgb(25, 25, 37);
+    border-color: rgba(255, 238, 0, 0.637);
+    border-style: solid;
+}
+
+.container-fluid .row .col-8 .row .col-3{
+    border-left-color: rgb(251, 255, 0);
+    border-left-style: dashed;
+}
+.container-fluid .row .col-8 .row .col-3 h3{
+    text-align: center;
+    color: white;
+    margin-left: 50px;
+    padding-bottom: 25px;
+    border-left: 4px solid rgb(255, 255, 255);
+    vertical-align: middle;
+
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row{
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-bottom: 4px dashed white;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.lugar{
+    border-right: 2px solid yellow;
+    border-top: 3px solid yellow;
+    border-left: 1px solid yellow;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.button{
+    border-right: 2px solid yellow;
+    border-top: 3px solid yellow;
+    border-left: 1px solid yellow;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.button form{
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    padding-top: 4px;
+    
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.button form button{
+    background-color: rgb(78, 255, 217);
+    color: rgb(0, 0, 0);
+    font-size: large;
+    text-align: center;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar{
+    margin-top: 10px;
+    padding-top: 4px;
+    border-radius: 5px;
+    border-color: black;
+    border-style: double;
+    
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+    font-size: medium;
+    text-align: center;
+}
+.lugar.disponible {
+    background-color: rgb(2, 226, 84);
+}
+.lugar.asignado {
+    background-color:rgb(252, 75, 56);
+}
+.lugar.no-verficado {
+    background-color:rgb(252, 190, 56);
+}
