@@ -83,9 +83,9 @@ def estacionamiento_ver_search():
         _lugar = _lugar.upper() # Para que todas las busquedas sean con mayusculas ya que no se debe tener ningun campo en minusculas
         conexion = conectar_db()
         cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
+        cursor.execute("SELECT * FROM hlugar WHERE id='"+_lugar+"';")
         find = cursor.fetchall()
-        if(find[0][3] == False):
+        if (find[0][3] >= 2):
             idTcket = find[0][5]
             print(idTcket)
             cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+idTcket+"';")
@@ -138,7 +138,7 @@ def estacionamiento_search_find():
         cursor = conexion.cursor()
         if _tipo == 'lugar':
             _lugar = _lugar.upper()
-            cursor.execute("SELECT * FROM lugar WHERE id='"+_lugar+"';")
+            cursor.execute("SELECT * FROM hlugar WHERE id='"+_lugar+"';")
             find = cursor.fetchall()
             print(find)
             if (find[0][3] == False):
@@ -252,19 +252,19 @@ def configuracion_agregar_add():
     print(_seccion)
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT count(seccion) FROM lugar WHERE seccion='"+str(_seccion)+"';") #saber el numero de lugares totales
+    cursor.execute("SELECT count(seccion) FROM hlugar WHERE seccion='"+str(_seccion)+"';") #saber el numero de lugares totales
     nl = cursor.fetchone()
     nl = nl[0]
     nl = nl+1 #Para sacar el numero de lugar segun los ya existentes
     print(nl)
     if _seccion == 'A':
-        cursor.execute("INSERT INTO lugar(id,numero,descripcion,disponible,seccion) VALUES ('A"+str(nl)+"','"+str(nl)+"','auto',true,'A');")
+        cursor.execute("INSERT INTO hlugar(id,numero,descripcion,estado,seccion,status) VALUES ('A"+str(nl)+"','"+str(nl)+"','auto',0,'A','disponible');")
         print('a')
     if _seccion == 'D':
-        cursor.execute("INSERT INTO lugar(id,numero,descripcion,disponible,seccion) VALUES ('D"+str(nl)+"','"+str(nl)+"','discapacitado',true,'D');")
+        cursor.execute("INSERT INTO hlugar(id,numero,descripcion,estado,seccion,status) VALUES ('D"+str(nl)+"','"+str(nl)+"','discapacitado',0,'D','disponible');")
         print("d")
     if _seccion == 'M':
-        cursor.execute("INSERT INTO lugar(id,numero,descripcion,disponible,seccion) VALUES ('M"+str(nl)+"','"+str(nl)+"','moto',true,'M');")
+        cursor.execute("INSERT INTO hlugar(id,numero,descripcion,estado,seccion,status) VALUES ('M"+str(nl)+"','"+str(nl)+"','moto',0,'M','disponible');")
         print('m')
     conexion.commit()
     conexion.close()
@@ -285,7 +285,7 @@ def configuracion_borrar_delete():
     _id = request.form['txtId']
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar WHERE id='"+str(_id)+"';")
+    cursor.execute("SELECT * FROM hlugar WHERE id='"+str(_id)+"';")
     data = cursor.fetchone()
     print(data)
     if (data[3] == False):
@@ -296,7 +296,7 @@ def configuracion_borrar_delete():
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
         return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje="ERROR!")
         
-    cursor.execute("DELETE FROM lugar WHERE id='"+str(_id)+"';")
+    cursor.execute("DELETE FROM hlugar WHERE id='"+str(_id)+"';")
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/borrar')
@@ -318,9 +318,9 @@ def configuracion_modificar_update():
     conexion = conectar_db()
     cursor = conexion.cursor()
     
-    cursor.execute("SELECT * FROM lugar WHERE id='"+str(_id)+"';")
+    cursor.execute("SELECT * FROM hlugar WHERE id='"+str(_id)+"';")
     find = cursor.fetchone()
-    if find[3] == True:
+    if find[3] == 0:
         now = datetime.datetime.now()
         hnow = now.strftime("%Y%m%d%H%M%S")
         tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -328,7 +328,7 @@ def configuracion_modificar_update():
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(_id)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE lugar SET disponible=False, validado=DEFAULT, ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
+        cursor.execute("UPDATE hlugar SET estado=1, status='no-verficado', ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
         
         generator(nticket)
     else:
@@ -340,7 +340,7 @@ def configuracion_modificar_update():
         tiempo = update_time(entrada=entrada)
         print(tiempo)
         cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
-        cursor.execute("UPDATE lugar SET disponible='true', ticket=null, validado=DEFAULT WHERE id='"+str(_id)+"';")
+        cursor.execute("UPDATE lugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(_id)+"';")
    
     conexion.commit()
     conexion.close()
@@ -373,15 +373,15 @@ def datos_detalle_parking():
 def data_for_view_parking(): #Obtiene todos los datos necesarios para poder crear la visualizacion del estacionamiento
     conexion = conectar_db()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM lugar where seccion = 'A' ORDER BY numero")
+    cursor.execute("SELECT * FROM hlugar where seccion = 'A' ORDER BY numero")
     Autos = cursor.fetchall()
     aLenght = len(Autos)#Saber la cantidad de registros encontrados
     anL = floor(aLenght/10) #Cuantas lineas son empezando en 0\
-    cursor.execute("SELECT * FROM lugar where seccion = 'D' ORDER BY numero")
+    cursor.execute("SELECT * FROM hlugar where seccion = 'D' ORDER BY numero")
     Discapacitados = cursor.fetchall()
     dLenght = len(Discapacitados)#Saber la cantidad de registros encontrados
     dnL = floor(dLenght/10)#Cuantas lineas son empezando en 0\
-    cursor.execute("SELECT * FROM lugar where seccion = 'M' ORDER BY numero")
+    cursor.execute("SELECT * FROM hlugar where seccion = 'M' ORDER BY numero")
     Motos = cursor.fetchall()
     mLenght = len(Motos)#Saber la cantidad de registros encontrados
     mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0\
@@ -410,7 +410,7 @@ def verificar_tiempo():
     while True:
         conexion = conectar_db()
         cursor = conexion.cursor()
-        cursor.execute("SELECT ticket FROM lugar WHERE disponible=False")
+        cursor.execute("SELECT ticket FROM hlugar WHERE estado>2")
         ocupados = cursor.fetchall()
         for ocupado in ocupados:
             cursor.execute("SELECT * FROM ticket WHERE id='"+str(ocupado[0])+"'")
@@ -445,7 +445,7 @@ def eliminar_qr():
     while True:
         conexion = conectar_db()
         cursor = conexion.cursor()
-        cursor.execute("SELECT ticket FROM lugar WHERE disponible=False;")
+        cursor.execute("SELECT ticket FROM hlugar WHERE estado>2;")
         ocupados = cursor.fetchall()
         cursor.execute("SELECT id FROM ticket;")
         tickets = cursor.fetchall()

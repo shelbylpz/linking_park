@@ -59,6 +59,15 @@
         font-size: medium;
         text-align: center;
     }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.disponible {
+        background-color: rgb(2, 226, 84);
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.asignado {
+        background-color:rgb(252, 75, 56);
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.no-verficado {
+        background-color:rgb(252, 190, 56);
+    }
 </style>
 <div class="container">
     <div class="container-fluid">
@@ -73,7 +82,7 @@
                                 {% for i in range(aLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Autos[i][6] }}">
                                             <p>{{ Autos[i][0] }} </p>
                                         </div>
                                     </div>
@@ -109,7 +118,7 @@
                                 {% for i in range(dLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Discapacitados[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Discapacitados[i][6] }}">
                                             <p>{{ Discapacitados[i][0] }}</p>
                                         </div>
                                     </div>
@@ -145,7 +154,7 @@
                                 {% for i in range(mLenght) %}
                                 <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar"  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Motos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Motos[i][6] }}">
                                             <p>{{ Motos[i][0] }}</p>
                                         </div>
                                     </div>

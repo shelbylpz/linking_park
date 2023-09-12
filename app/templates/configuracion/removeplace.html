@@ -59,6 +59,15 @@
         font-size: medium;
         text-align: center;
     }
+    .lugar.disponible {
+        background-color: rgb(2, 226, 84);
+    }
+    .lugar.asignado {
+        background-color:rgb(252, 75, 56);
+    }
+    .lugar.no-verficado {
+        background-color:rgb(252, 190, 56);
+    }
 </style>
 
 <div class="container">
@@ -87,12 +96,12 @@
                                     <div class="col button">
                                         <form action="/configuracion/borrar/delete" method="post">
                                         <input value="{{ Autos[i][0] }}" type="hidden" name="txtId" id="txtId">
-                                        <button type="submit" class="" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>{{ Autos[i][0] }}</button>
+                                        <button type="submit" class="lugar {{ Autos[i][6] }}">{{ Autos[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
                                     <div class="col lugar">
-                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Autos[i][6] }}">
                                             <p>{{ Autos[i][0] }} </p>
                                         </div>
                                     </div>
@@ -123,12 +132,12 @@
                                     <div class="col button">
                                         <form action="/configuracion/borrar/delete" method="post">
                                         <input value="{{ Discapacitados[i][0] }}" type="hidden" name="txtId" id="txtId">
-                                        <button type="submit" class="" {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Discapacitados[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>{{ Discapacitados[i][0] }}</button>
+                                        <button type="submit" class="lugar {{ Discapacitados[i][6] }}">{{ Discapacitados[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
                                     <div class="col lugar">
-                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Discapacitados[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Discapacitados[i][6] }}">
                                             <p>{{ Discapacitados[i][0] }}</p>
                                         </div>
                                     </div>
@@ -159,13 +168,13 @@
                                     <div class="col button">
                                         <form action="/configuracion/borrar/delete" method="post">
                                         <input value="{{ Motos[i][0] }}" type="hidden" name="txtId" id="txtId">
-                                        <button type="submit" class=""  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Motos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>{{ Motos[i][0] }}</button>
+                                        <button type="submit" class="lugar {{ Motos[i][6] }}">{{ Motos[i][0] }}</button>
                                         </form>
                                     </div>
                                     {% else %}
                                 <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar" {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Motos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Motos[i][6] }}">
                                             <p>{{ Motos[i][0] }}</p>
                                         </div>
                                     </div>

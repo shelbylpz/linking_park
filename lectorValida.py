@@ -54,7 +54,8 @@ while True:
                 if(ticket[6] == False):
                     id = ticket[0]
                     print(id)
-                    cursor.execute("UPDATE lugar SET validado='True' WHERE id='"+str(id)+"';")
+                    cursor.execute("UPDATE lugar SET estado=3 WHERE id='"+str(id)+"';")
+                    cursor.execute("UPDATE lugar SET status='asignado' WHERE id='"+str(id)+"';")
                     cursor.execute("SELECT * FROM lugar WHERE id='"+str(id)+"';")
                     lugar = cursor.fetchone()
                     print(lugar)
