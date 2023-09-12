@@ -24,38 +24,10 @@
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
 </head>
 
 <body>
-    <style>
-        body {
-        background-color: rgb(222, 222, 222);
-    }
-        .container-fluid a {
-            text-decoration: none;
-            color: white;
-        }
-        .container-fluid a:hover, .nav-link:focus{
-            color: rgba(255, 255, 255, 0.699)
-        }
-        .container-fluid a.show{
-            color:rgba(255, 255, 255, 0.699);
-        }
-        .container-fluid .navbar-collapse .dropdown-menu a:hover{
-            background-color: rgb(47, 56, 70);
-        }
-        
-        .container-fluid .out a {
-            text-decoration: none;
-            color: #ffc107;
-        }
-        .container-fluid .out a:hover{
-            color:#000;
-            background-color: #ffc107;
-        }
-
-    </style>
     <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: rgb(23, 30, 41);">
         <div class="container-fluid">
             <a class="navbar-brand" href="/"> 

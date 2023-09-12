@@ -1,0 +1,6 @@
+.p-5 .container .container .table{
+    border: 1px solid black;
+}
+.p-5 .container .container .table thead{
+    background-color: rgb(255, 213, 0);
+}
