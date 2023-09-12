@@ -1,0 +1,84 @@
+.container-fluid .row .col-8{
+    background-color: rgb(25, 25, 37);
+    border-color: rgba(255, 238, 0, 0.637);
+    border-style: solid;
+}
+
+.container-fluid .row .col-8 .row .col-3{
+    border-left-color: rgb(251, 255, 0);
+    border-left-style: dashed;
+}
+.container-fluid .row .col-8 .row .col-3 h3{
+    text-align: center;
+    color: white;
+    margin-left: 50px;
+    padding-bottom: 25px;
+    border-left: 4px solid rgb(255, 255, 255);
+    vertical-align: middle;
+
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row{
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-bottom: 4px dashed white;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col.lugar{
+    border-right: 2px solid yellow;
+    border-top: 3px solid yellow;
+    border-left: 1px solid yellow;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar{
+    margin-top: 10px;
+    padding-top: 4px;
+    border-radius: 5px;
+    border-color: black;
+    border-style: double;
+    
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+    font-size: medium;
+    text-align: center;
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.disponible {
+    background-color: rgb(2, 226, 84);
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.asignado {
+    background-color:rgb(252, 75, 56);
+}
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.no-verficado {
+    background-color:rgb(252, 190, 56);
+}
+
+.container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar p {
+    font-size: medium;
+    text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+    .row{
+        flex-direction: column;
+    }
+    .col-3{
+        align-items: end;
+    }
+    .col-4{
+        align-items: center;
+    }
+    .container-fluid{
+        padding-left: 30%;
+        padding-right: 0px;
+    }
+    .searchbar{
+        width: 220px;
+        flex-shrink: 0;
+        align-items: center;
+    }
+    .autos{
+        padding-left: 10px;
+    }
+
+    .card{
+        flex-shrink: 0;
+        width: 200px;
+    }
+}

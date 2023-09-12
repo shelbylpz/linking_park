@@ -1,0 +1,25 @@
+body {
+    background-color: rgb(222, 222, 222);
+}
+.container-fluid a {
+    text-decoration: none;
+    color: white;
+}
+.container-fluid a:hover, .nav-link:focus{
+    color: rgba(255, 255, 255, 0.699)
+}
+.container-fluid a.show{
+    color:rgba(255, 255, 255, 0.699);
+}
+.container-fluid .navbar-collapse .dropdown-menu a:hover{
+    background-color: rgb(47, 56, 70);
+}
+
+.container-fluid .out a {
+    text-decoration: none;
+    color: #ffc107;
+}
+.container-fluid .out a:hover{
+    color:#000;
+    background-color: #ffc107;
+}
