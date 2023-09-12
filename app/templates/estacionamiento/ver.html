@@ -17,7 +17,7 @@
                                 {% for i in range(aLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar {% if Autos[i][3] is true %}disponible{% else %}{% if Autos[i][6] is false %}no-verficado{% else %}asignado{% endif %}{% endif %}">
+                                        <div class="lugar {{ Autos[i][6] }}">
                                             <p>{{ Autos[i][0] }} </p>
                                         </div>
                                     </div>
@@ -51,7 +51,7 @@
                                 {% for i in range(dLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar"  {% if Discapacitados[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Discapacitados[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Discapacitados[i][6] }}">
                                             <p>{{ Discapacitados[i][0] }}</p>
                                         </div>
                                     </div>
@@ -85,7 +85,7 @@
                                 {% for i in range(mLenght) %}
                                 <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar"  {% if Motos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Motos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {{ Motos[i][6] }}">
                                             <p>{{ Motos[i][0] }}</p>
                                         </div>
                                     </div>
@@ -144,8 +144,8 @@
                           <h5 class="card-title">{% if find == '' %}Lugar{% else %}Lugar: {{ find[0][0] }}{% endif %}</h5>
                           <p class="card-text">{% if find == '' %}{% else %}
                             Seccion: {% if find[0][2] == 'auto' %}Automoviles{% elif find[0][2] == 'discapacitado' %}Discapacitados{% elif find[0][2] == 'moto' %}Motos{% endif %} ({{ find[0][4] }}) <br>
-                            Estado: {% if find[0][3] == true %}Disponible{% else %}Ocupado{% if find[0][6] is false %} (No validado){% else %} {% endif %} <br> {% endif %}
-                            {% if find[0][3] == true %}{% else %}N Ticket: {{ find[0][5] }} <br>
+                            Estado: {{ find[0][6] }}  <br>
+                            {% if find[0][3] == 0 %}{% else %}N Ticket: {{ find[0][5] }} <br>
                             <img src="/qr/{{ find[0][5] }}.png" alt="QR">
                             {% endif %}
                             {% endif %}
@@ -179,9 +179,9 @@
                                 <p>M - Motos</p>
                             </div>
                             <div class="col-4">
-                                <p class="disp" style="background-color:rgb(252, 75, 56); color: white;">Ocupado</p>
+                                <p class="disp" style="background-color:rgb(252, 75, 56); color: white;">Asignado</p>
                                 <p class="disp" style="background-color: rgb(2, 226, 84);">Disponible</p>
-                                <p class="disp" style="background-color:rgb(252, 190, 56);">No Validado</p>
+                                <p class="disp" style="background-color:rgb(252, 190, 56);">No-Verficado</p>
                             </div>
                         </div>
                     </div>
