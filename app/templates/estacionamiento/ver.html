@@ -42,6 +42,15 @@
         font-size: medium;
         text-align: center;
     }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.disponible {
+        background-color: rgb(2, 226, 84);
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.asignado {
+        background-color:rgb(252, 75, 56);
+    }
+    .container-fluid .row .col-8 .row .col-9 .container-fluid .row .row .col .lugar.no-verficado {
+        background-color:rgb(252, 190, 56);
+    }
 </style>
 <div class="container">
     <div class="container-fluid">
@@ -57,7 +66,7 @@
                                 {% for i in range(aLenght) %}
                                     <!-- Inicia Preset de un lugar-->
                                     <div class="col lugar">
-                                        <div class="lugar" {% if Autos[i][3] is true %}style="background-color: rgb(2, 226, 84);"{% else %}{% if Autos[i][6] is false %}style="background-color:rgb(252, 190, 56);"{% else %}style="background-color:rgb(252, 75, 56);"{% endif %}{% endif %}>
+                                        <div class="lugar {% if Autos[i][3] is true %}disponible{% else %}{% if Autos[i][6] is false %}no-verficado{% else %}asignado{% endif %}{% endif %}">
                                             <p>{{ Autos[i][0] }} </p>
                                         </div>
                                     </div>
