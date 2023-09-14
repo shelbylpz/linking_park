@@ -23,7 +23,7 @@ def index():
         return redirect('/login')
     n_avisos = verificar_nalertas()
     print(n_avisos)
-    return render_template("index.html", n_avisos=n_avisos)
+    return render_template("index.html", n_avisos=n_avisos, usuario=session['usuario'])
 #Obtencion de imagen o CSS personalizado
 @app.route('/img/<imagen>')
 def imagenes(imagen):
@@ -44,7 +44,7 @@ def estacionamiento():
     if not 'login' in session:
         return redirect('/login')
     n_avisos = verificar_nalertas()
-    return render_template("estacionamiento.html", n_avisos=n_avisos)
+    return render_template("estacionamiento.html", n_avisos=n_avisos, usuario=session['usuario'])
 
 #Entradas y salidas
 @app.route("/estacionamiento/inout")
@@ -58,7 +58,7 @@ def entradas_salidas():
     tickets = cursor.fetchall()
     conexion.commit()
     conexion.close()
-    return render_template("/estacionamiento/inout.html", tickets=tickets, n_avisos=n_avisos)
+    return render_template("/estacionamiento/inout.html", tickets=tickets, n_avisos=n_avisos, usuario=session['usuario'])
 
 #Seccion de visualizar el estacionamiento
 @app.route('/estacionamiento/ver')
@@ -68,7 +68,7 @@ def estacionamiento_ver():
     n_avisos = verificar_nalertas()
     find=''
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template("/estacionamiento/ver.html",  n_avisos=n_avisos, find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template("/estacionamiento/ver.html",  n_avisos=n_avisos, find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
 
 #Busqueda de un lugar dentro de visualizar
 @app.route('/estacionamiento/ver/search', methods=["POST"])
@@ -105,12 +105,12 @@ def estacionamiento_ver_search():
         cursor.close()
         conexion.close()
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-        return render_template("/estacionamiento/ver.html",n_avisos=n_avisos, find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+        return render_template("/estacionamiento/ver.html",n_avisos=n_avisos, find=find,Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template("/estacionamiento/ver.html",n_avisos=n_avisos, find='',Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje='Error')
+    return render_template("/estacionamiento/ver.html",n_avisos=n_avisos, find='',Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje='Error', usuario=session['usuario'])
 
 #Seccion buscar lugar o ticket
 
@@ -122,7 +122,7 @@ def estacionamiento_search():
     n_avisos = verificar_nalertas()
     find = ''
     tipo = ''
-    return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find=find, tipo=tipo)
+    return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find=find, tipo=tipo, usuario=session['usuario'])
 
 @app.route('/estacionamiento/search/find', methods=['POST'])
 def estacionamiento_search_find():
@@ -166,7 +166,7 @@ def estacionamiento_search_find():
             conexion.close()
             tipo = 't'
         print(find)
-        return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find=find, tipo=tipo)
+        return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find=find, tipo=tipo, usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -174,7 +174,7 @@ def estacionamiento_search_find():
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find='' , mensaje='ERROR')
+    return render_template('/estacionamiento/splace.html',n_avisos=n_avisos, find='' , mensaje='ERROR', usuario=session['usuario'])
 
 #Rutas de Notificaciones
 
@@ -183,7 +183,7 @@ def avisos():
     if not 'login' in session:
         return redirect('/login')
     n_avisos = verificar_nalertas()
-    return render_template("/notificaciones/alertas.html", n_avisos=n_avisos)
+    return render_template("/notificaciones/alertas.html", n_avisos=n_avisos, usuario=session['usuario'])
 
 @app.route("/alertas/<table>")
 def avisos_seleccion(table):
@@ -192,7 +192,7 @@ def avisos_seleccion(table):
     n_avisos = verificar_nalertas()
     datos, tipo = datos_tipo(table)
     print(datos)
-    return render_template("/notificaciones/alertas.html",n_avisos=n_avisos, datos=datos, tipo=tipo)
+    return render_template("/notificaciones/alertas.html",n_avisos=n_avisos, datos=datos, tipo=tipo, usuario=session['usuario'])
 
 def datos_tipo(table):
     conexion = conectar_db()
@@ -233,21 +233,25 @@ def avisos_informar():
     conexion.close()
     datos, tipo = datos_tipo(_table)
     mensaje = "Alerta atendida se movio al historial con el ID:"+str(newid)
-    return render_template('/notificaciones/alertas.html',n_avisos=n_avisos, datos=datos, tipo=tipo, mensaje=mensaje)
+    return render_template('/notificaciones/alertas.html',n_avisos=n_avisos, datos=datos, tipo=tipo, mensaje=mensaje, usuario=session['usuario'])
 
 #Rutas de configuraciones
 @app.route('/configuracion/agregar')
 def configuracion_agregar():
     if not 'login' in session:
         return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     n_avisos = verificar_nalertas()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template("/configuracion/addplace.html",n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template("/configuracion/addplace.html",n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
 
 @app.route('/configuracion/agregar/add', methods=['POST'])
 def configuracion_agregar_add():
     if not 'login' in session:
         return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     _seccion = request.form['Seccion']
     print(_seccion)
     conexion = conectar_db()
@@ -274,14 +278,18 @@ def configuracion_agregar_add():
 def configuracion_borrar():
     if not 'login' in session:
         return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     n_avisos = verificar_nalertas()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
 
 @app.route('/configuracion/borrar/delete', methods=['POST'])
 def configuracion_borrar_delete():
     if not 'login' in session:
         return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     _id = request.form['txtId']
     conexion = conectar_db()
     cursor = conexion.cursor()
@@ -294,7 +302,7 @@ def configuracion_borrar_delete():
         conexion.close()
         n_avisos = verificar_nalertas()
         Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-        return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje="ERROR!")
+        return render_template('/configuracion/removeplace.html',n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, mensaje="ERROR!", usuario=session['usuario'])
         
     cursor.execute("DELETE FROM hlugar WHERE id='"+str(_id)+"';")
     conexion.commit()
@@ -305,15 +313,19 @@ def configuracion_borrar_delete():
 def configuracion_modificar():
     if not 'login' in session:
         return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     n_avisos = verificar_nalertas()
     print()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template('/configuracion/modplace.html', n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL)
+    return render_template('/configuracion/modplace.html', n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
 
 @app.route('/configuracion/modificar/update', methods=['POST'])
 def configuracion_modificar_update():
     if not 'login' in session:
         return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     _id = request.form['txtId']
     conexion = conectar_db()
     cursor = conexion.cursor()
@@ -345,6 +357,21 @@ def configuracion_modificar_update():
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/modificar')
+
+@app.route("/configuracion/usuarios")
+def configuracion_usuarios():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    query = "SELECT * FROM users ORDER BY id;"
+    cursor.execute(query)
+    registros = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return render_template('/configuracion/usuarios.html', registros=registros, usuario=session['usuario'])
 
 #Funciones modulacion
 
@@ -492,10 +519,8 @@ def login_post():
         conexion.close()
         if find[2] == _password:
             session["login"] = True
-            if find[3] == True :
-                session["usuario"] = "Administrador"
-            else:
-                session["usuario"] = "Normal"
+            session["usuario"] = find[3]
+            print(find[3])
             return redirect("/")
     except (Exception, psycopg2.DatabaseError) as error:
         print("No encontrado")

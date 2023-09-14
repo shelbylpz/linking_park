@@ -12,13 +12,19 @@
            window.location.reload(1);
         },  10000);
         </script>
+    {% else %}{% if registros %}
+    <script>
+        setTimeout(function(){
+           window.location.reload(1);
+        },  60000);
+        </script>
     {% else %}
     <script>
         setTimeout(function(){
            window.location.reload(1);
         },  30000);
         </script>
-        
+    {% endif %}
     {% endif %}
 
     <!-- Bootstrap CSS v5.2.1 -->
@@ -61,6 +67,7 @@
                             <li><a class="dropdown-item" href="/alertas/historial" >Historial</a></li>
                         </ul>
                     </li>
+                    {% if usuario == 'Administrador' %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">Configuracion
@@ -69,8 +76,10 @@
                             <li ><a class="dropdown-item" href="/configuracion/agregar">Agregar lugar</a></li>
                             <li ><a class="dropdown-item" href="/configuracion/borrar">Eliminar lugar</a></li>
                             <li ><a class="dropdown-item" href="/configuracion/modificar">Modificar lugar</a></li>
+                            <li ><a class="dropdown-item" href="/configuracion/usuarios">Admninistrar Usuarios</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
                 <div class="out">
                     <a class="btn btn-outline-warning" href="/alertas/avisos">
