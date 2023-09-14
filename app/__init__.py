@@ -482,12 +482,28 @@ def login_post():
     _password = request.form['txtPassword']
     print(_usuario)
     print(_password)
-
-    if _usuario == "admin" and _password == "123":
-        session["login"] = True
-        session["usuario"] = "Administrador"
-        return redirect("/")
-    
+    try:
+        conexion = conectar_db()
+        cursor = conexion.cursor()
+        query = "SELECT * FROM users WHERE usuario='"+str(_usuario)+"';"
+        cursor.execute(query)
+        find = cursor.fetchone()
+        cursor.close()
+        conexion.close()
+        if find[2] == _password:
+            session["login"] = True
+            if find[3] == True :
+                session["usuario"] = "Administrador"
+            else:
+                session["usuario"] = "Normal"
+            return redirect("/")
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("No encontrado")
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
     return render_template("login.html", mensaje = "Acceso denegado")
 
 @app.route("/LogOut")
