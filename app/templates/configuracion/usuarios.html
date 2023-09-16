@@ -10,14 +10,17 @@
                     Datos del Usuario
                 </div>
                 <div class="card-body">
-                    <form action="" method="post" enctype="multipart/form-data">
+                    <form action="/configuracion/usuarios/add" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="txtNombre" class="form-label">Usuario:</label>
-                            <input type="text" class="form-control" name="txtNombre" id="txtNombre"aria-describedby="helpId" placeholder="Escriba el nombre del usuario">
+                            <input type="text" class="form-control" name="txtNombre" id="txtNombre"aria-describedby="helpId" placeholder="Escriba el nombre del usuario" required>
+                            {% if error %}
+                            <p>Usuario ya existente!</p>
+                            {% endif %}
                         </div>
                         <div class="mb-3">
                             <label for="txtPassword" class="form-label">Password</label>
-                            <input type="password" id="txtPassword" class="form-control">
+                            <input type="password" id="txtPassword" name="txtPassword" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label for="txtTipo" class="form-label">Tipo de usuario:</label><br>
@@ -39,7 +42,6 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Password</th>
                         <th>Tipo</th>
@@ -49,7 +51,6 @@
                 <tbody>
                     {% for registro in registros %}
                     <tr >
-                        <td>{{ registro[0] }}</td>
                         <td>{{ registro[1] }}</td>
                         <td>{{ registro[2] }}</td>
                         <td>{{ registro[3] }}</td>

@@ -13,10 +13,6 @@ from connect import conectar_db
 app = Flask(__name__)
 app.secret_key="thelmamada"
 
- 
-
-
-
 @app.route("/")
 def index():
     if not 'login' in session:
@@ -315,10 +311,8 @@ def configuracion_modificar():
         return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
-    n_avisos = verificar_nalertas()
-    print()
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
-    return render_template('/configuracion/modplace.html', n_avisos=n_avisos, Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
+    return render_template('/configuracion/modplace.html', n_avisos=verificar_nalertas(), Autos=Autos, Discapacitados=Discapacitados, Motos=Motos, aLenght=aLenght, dLenght=dLenght, mLenght=mLenght, anL=anL, dnL=dnL, mnL=mnL, usuario=session['usuario'])
 
 @app.route('/configuracion/modificar/update', methods=['POST'])
 def configuracion_modificar_update():
@@ -364,14 +358,36 @@ def configuracion_usuarios():
         return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    query = "SELECT * FROM users ORDER BY id;"
-    cursor.execute(query)
-    registros = cursor.fetchall()
-    cursor.close()
-    conexion.close()
-    return render_template('/configuracion/usuarios.html', registros=registros, usuario=session['usuario'])
+    return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), usuario=session['usuario'], n_avisos=verificar_nalertas())
+
+@app.route('/configuracion/usuarios/add', methods=['POST'])
+def configuracion_usuarios_add():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador' :
+        return redirect('/')
+    _username = request.form['txtNombre']
+    _password = request.form['txtPassword']
+    _tipo = request.form.get("txtTipo")
+    print(_username)
+    print(_password)
+    print(_tipo)
+    try:
+        conexion = conectar_db()
+        cursor = conexion.cursor()
+        query = "INSERT INTO users VALUES(DEFAULT,'"+str(_username)+"','"+str(_password)+"','"+str(_tipo)+"');"
+        cursor.execute(query)
+        conexion.commit()
+        conexion.close()
+        return redirect('/configuracion/usuarios')
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error durante la ejecucion de la consulta: ", error)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+    return render_template('/configuracion/usuarios.html', error=True, registros=data_for_users_table(),n_avisos=verificar_nalertas())
 
 #Funciones modulacion
 
@@ -414,6 +430,16 @@ def data_for_view_parking(): #Obtiene todos los datos necesarios para poder crea
     mnL = floor(mLenght/10)#Cuantas lineas son empezando en 0\
     conexion.close()
     return Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL 
+
+def data_for_users_table():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    query = "SELECT * FROM users ORDER BY id;"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return data
 
 route = os.path.abspath(os.getcwd())
 
