@@ -379,7 +379,8 @@ def configuracion_usuarios_add():
         cursor.execute(query)
         conexion.commit()
         conexion.close()
-        return redirect('/configuracion/usuarios')
+        mensaje = ["success","Usuario agregado correctamente!", ""]
+        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(),n_avisos=verificar_nalertas())
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -389,6 +390,45 @@ def configuracion_usuarios_add():
             conexion.close()
     return render_template('/configuracion/usuarios.html', error=True, registros=data_for_users_table(),n_avisos=verificar_nalertas())
 
+@app.route("/configuracion/usuarios/delete", methods=['POST'])
+def configuracion_users_delete():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador' :
+        return redirect('/')
+    _id = request.form['txtID']
+    print(session["id"])
+    print(_id)
+    if int(_id) == int(session["id"]) :
+        mensaje = ["warning","Usuario no eliminado!","El Usuario tiene una session abierta!"]
+        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas())
+    try:
+        conexion = conectar_db()
+        cursor = conexion.cursor()
+        query = "DELETE FROM users WHERE id="+str(_id)+";"
+        cursor.execute(query)
+        conexion.commit()
+        conexion.close()
+        mensaje = ["success","Usuario eliminado!","El Usuario ha sido eliminado correctamente!"]
+        return render_template('/configuracion/usuarios.html',mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas())
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error durante la ejecucion de la consulta: ", error)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+    return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), n_avisos=verificar_nalertas())
+
+@app.route("/configuracion/usuarios/edit", methods=['POST'])
+def configuracion_users_edit():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador' :
+        return redirect('/')
+    _id = request.form['txtID']
+    print(session["id"])
+    print(_id)
 #Funciones modulacion
 
 def update_time(entrada):
@@ -546,7 +586,10 @@ def login_post():
         if find[2] == _password:
             session["login"] = True
             session["usuario"] = find[3]
+            session["id"] = find[0]
             print(find[3])
+            print(find[0])
+            print(session["id"])
             return redirect("/")
     except (Exception, psycopg2.DatabaseError) as error:
         print("No encontrado")
