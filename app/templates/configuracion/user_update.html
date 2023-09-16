@@ -1,0 +1,93 @@
+{% include "base.html" %}
+<!--Esto es solo un esqueleto pa modificar-->
+
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/usuarios.css') }}">
+
+<div class="container">
+    {% if mensaje %}
+    <div class="alert alert-{{ mensaje[0] }} alert-dismissible fade show" role="alert">
+        <strong>{{ mensaje[1] }}</strong><br>
+        <p>{{ mensaje[2] }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <br>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    Datos del Usuario
+                </div>
+                <div class="card-body">
+                    <form action="/configuracion/usuarios/add" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="txtNombre" class="form-label">Usuario:</label>
+                            <input type="text" class="form-control" name="txtNombre" id="txtNombre"aria-describedby="helpId" placeholder="Escriba el nombre del usuario" required>
+                            {% if error %}
+                            <p>Usuario ya existente!</p>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPassword" class="form-label">Password</label>
+                            <input type="password" id="txtPassword" name="txtPassword" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtTipo" class="form-label">Tipo de usuario:</label><br>
+                            <select class="form-select form-select-sm" name="txtTipo" id="txtTipo">
+                                <option selected value="Administrador">Administrador</option>
+                                <option value="Usuario">Usuario</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-outline-warning">Agregar</button>
+
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Password</th>
+                        <th>Tipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in registros %}
+                    <tr >
+                        <td>{{ registro[1] }}</td>
+                        <td>{{ registro[2] }}</td>
+                        <td>{{ registro[3] }}</td>
+                        <td>
+                            <ul class="acciones">
+                                <li>
+                                    <form action="" method="post">
+                                        <input value="{{ registro[0] }}" type="hidden" name="txtID" id="txtID">
+                                        <button type="submit" class="btn btn-primary">Editar</button>
+                                    </form>  
+                                </li>
+                                <li>
+                                    <form action="/configuracion/usuarios/delete" method="post">
+                                        <input value="{{ registro[0] }}" type="hidden" name="txtID" id="txtID">
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+           
+            
+        </div>
+
+    </div>
+</div>
+
+{% include 'end.html' %}
