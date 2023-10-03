@@ -1,0 +1,102 @@
+<!--<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/ver.css') }}">-->
+
+
+{% include "base.html" %}
+
+<style>
+    
+    div.lugar {
+        font-size: small;
+    }
+
+    div.lugar-ocupado {
+        padding-bottom: 5%;
+        color: #ffff;
+        background-color: rgba(252, 75, 56);
+    }
+
+    div.lugar-disponible {
+        padding-bottom: 50%;
+        color: #fff;
+        background-color: rgb(2, 226, 84);
+    }
+
+    div.lugar-no-verficado {
+        padding-bottom: 5%;
+        color: #fff;
+        background-color: rgb(252, 190, 56);
+    }
+</style>
+<div class="scroll">
+    <div class="container">
+        <div class="container-fluid">
+            <h1 style="text-align: center;">Visualizar estacionamiento</h1>
+            <br>
+            <div class="row" id="DividirPagina">
+                <div class="col-8"> <!-- Columna para View-->
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        {% for lugar in data %}
+                        <div class="col">
+                            <div class="card  text-center lugar lugar-{{lugar[6]}} mb-2" style="max-width: 18rem;">
+                                <div class="card-header">Lugar {{lugar[0]}}</div>
+                                <div class="card-body pparking">
+                                    <h5 class="card-title">{{lugar[6]}}</h5>
+                                    {%if lugar[3]%}
+                                    <p class="card-text">
+                                        {{lugar[5]}}
+                                        <br>
+                                        <img src="/qr/{{ lugar[5] }}.png" height="100px" alt="QR">
+                                    </p>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-4">
+                    {% if mensaje %}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>{{ mensaje }}</strong>
+                        <br>
+                        No se encontro ningun registro.
+                    </div>
+
+                    {% endif %}
+                    <div class="container searchbar">
+                        <form action="/estacionamiento/ver/search" method="post" class="d-flex" role="search">
+                            <input name="txtSearch" id="txtSearch" class="form-control me-2" type="search"
+                                placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                        <br>
+                        <div class="card text-center">
+                            <div class="card-header">
+                                {% if find == '' %}{% else %}Busqueda encontrada{% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{% if find == '' %}Lugar{% else %}Lugar: {{ find[0][0] }}{% endif
+                                    %}</h5>
+                                <p class="card-text">{% if find == '' %}{% else %}
+                                    Seccion: {% if find[0][2] == 'auto' %}Automoviles{% elif find[0][2] ==
+                                    'discapacitado' %}Discapacitados{% elif find[0][2] == 'moto' %}Motos{% endif %} ({{
+                                    find[0][4] }}) <br>
+                                    Estado: {{ find[0][6] }} <br>
+                                    {% if find[0][3] == 0 %}{% else %}N Ticket: {{ find[0][5] }} <br>
+                                    <img src="/qr/{{ find[0][5] }}.png" alt="QR">
+                                    {% endif %}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'end.html' %}
