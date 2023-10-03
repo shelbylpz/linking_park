@@ -346,7 +346,7 @@ def configuracion_modificar_update():
         tiempo = update_time(entrada=entrada)
         print(tiempo)
         cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
-        cursor.execute("UPDATE lugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(_id)+"';")
+        cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(_id)+"';")
    
     conexion.commit()
     conexion.close()
@@ -561,6 +561,15 @@ def eliminar_qr():
         time.sleep(30)
     #endWhile
 
+@app.route("/testview")
+def testview():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute('SELECT * FROM hlugar ORDER BY id ASC;')
+    data = cursor.fetchall()
+    conexion.close()
+    cursor.close()
+    return render_template('/estacionamiento/view-detailed.html', find='', data=data, n_avisos=verificar_nalertas())
 
 #Rutas de Login y Logout
 @app.route("/login")
@@ -587,6 +596,7 @@ def login_post():
             session["login"] = True
             session["usuario"] = find[3]
             session["id"] = find[0]
+            session["view"] = find[4]
             print(find[3])
             print(find[0])
             print(session["id"])
