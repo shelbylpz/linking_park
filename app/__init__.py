@@ -1,13 +1,12 @@
 import os, shutil
 from math import floor,ceil
-from flask import Flask, render_template, request, redirect, session, send_from_directory, Response
+from flask import Flask, render_template, request, redirect, session, send_from_directory, Response, url_for, make_response
 import psycopg2 
 import datetime
 import time
 import threading
 import pyqrcode
 import png
-from connect import conectar_db
 #Imports para la camara
 import cv2
 import pyqrcode
@@ -20,6 +19,16 @@ import time
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
+
+def conectar_db():
+    conn = psycopg2.connect(
+      database="linking_park", 
+      user='postgres', 
+      password='RTvAsfCAv3neSn', 
+      host='serverproyectoxdbbdd.postgres.database.azure.com', 
+      port= '5432'
+   )
+    return conn
 
 @app.route("/")
 def index():
@@ -583,6 +592,7 @@ def testview():
 def generate():
     
     cap = cv2.VideoCapture(0)
+    t = 0
     while True:
     # Leemos los frames
         ret, frame = cap.read()
@@ -611,21 +621,31 @@ def generate():
             print(" Numero de Ticket: ", str(info))
             if(info != ''):
                 id_t = info
-                with app.app_context(), app.test_request_context():
-                    return render_template('/test/info.html', codigo=id_t)
-                    cap.release()
+                with app.app_context():
+                    resp = make_response(redirect('/testpago'))
+                    resp.headers['X-Something'] = 'A value'
+                    return resp
+            
             # Imprimimo
             # Mostramos FPS
             # Leemos teclado
         (flag, encodeImage) = cv2.imencode(".jpg", frame)
+        if t == 1:
+            break
         if not flag:
             continue
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodeImage) + b'\r\n')
+    
     cap.release()
 
 @app.route("/testcamera")
 def testcamera():
     return render_template('/test/camera.html')
+
+@app.route('/testpago')
+def testpago():
+    return render_template('/test/info.html')
+
 
 @app.route("/video_feed")
 def video_feed():
