@@ -594,9 +594,32 @@ def testview():
 def testcamera():
     return render_template('/test/camera.html')
 
-@app.route('/testpago')
-def testpago():
-    return render_template('/test/info.html')
+@app.route('/testpago/<id>')
+def testpago(id):
+    try:
+        conexion =  conectar_db()
+        cursor = conexion.cursor()
+        query = "SELECT * FROM ticket WHERE id='"+str(id)+"';"
+        cursor.execute(query)
+        data = cursor.fetchone()
+        print(data)
+        newdata = {
+            'id': data[0]
+        }
+        cursor.close()
+        conexion.commit()
+        conexion.close()
+        if data is None:
+            return render_template('/test/info.html', error='No encontrado')
+        return render_template('/test/info.html',codigo=id, data=data, newdata=newdata)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error durante la ejecucion de la consulta: ", error)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+    return render_template('/test/info.html', codigo='No encontrado')
 
 #Rutas de Login y Logout
 @app.route("/login")
