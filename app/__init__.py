@@ -589,54 +589,6 @@ def testview():
     cursor.close()
     return render_template('/estacionamiento/view-detailed.html', find='', data=data, n_avisos=verificar_nalertas())
 
-def generate():
-    
-    cap = cv2.VideoCapture(0)
-    t = 0
-    while True:
-    # Leemos los frames
-        ret, frame = cap.read()
-
-        # Leemos los codigos QR
-        for codes in decode(frame):
-            # Extraemos info
-            #info = codes.data
-
-            # Decodidficamos
-            info = codes.data.decode('utf-8')
-
-            # Tipo de persona LETRA
-            
-
-            # Extraemos coordenadas
-            pts = np.array([codes.polygon], np.int32)
-            xi, yi = codes.rect.left, codes.rect.top
-
-            # Redimensionamos
-            pts = pts.reshape((-1,1,2))
-
-            
-            cv2.polylines(frame, [pts], True, (255, 255, 0), 5)
-            cv2.putText(frame, str(info), (xi - 15, yi - 15), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 55, 0), 2)
-            print(" Numero de Ticket: ", str(info))
-            if(info != ''):
-                id_t = info
-                with app.app_context():
-                    resp = make_response(redirect('/testpago'))
-                    resp.headers['X-Something'] = 'A value'
-                    return resp
-            
-            # Imprimimo
-            # Mostramos FPS
-            # Leemos teclado
-        (flag, encodeImage) = cv2.imencode(".jpg", frame)
-        if t == 1:
-            break
-        if not flag:
-            continue
-        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodeImage) + b'\r\n')
-    
-    cap.release()
 
 @app.route("/testcamera")
 def testcamera():
@@ -645,11 +597,6 @@ def testcamera():
 @app.route('/testpago')
 def testpago():
     return render_template('/test/info.html')
-
-
-@app.route("/video_feed")
-def video_feed():
-    return Response(generate(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 #Rutas de Login y Logout
 @app.route("/login")
