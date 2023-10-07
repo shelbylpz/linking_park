@@ -1,17 +1,34 @@
 import os, shutil
 from math import floor,ceil
-from flask import Flask, render_template, request, redirect, session, send_from_directory
+from flask import Flask, render_template, request, redirect, session, send_from_directory, Response, url_for, make_response
 import psycopg2 
 import datetime
 import time
 import threading
 import pyqrcode
 import png
-from pyqrcode import QRCode
-from connect import conectar_db
+#Imports para la camara
+import cv2
+import pyqrcode
+import png
+from pyqrcode import QRCode #Esta tambien es escencial para el funcionamiento del programa
+import psycopg2
+from pyzbar.pyzbar import decode
+import numpy as np
+import time
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
+
+def conectar_db():
+    conn = psycopg2.connect(
+      database="linking_park", 
+      user='postgres', 
+      password='RTvAsfCAv3neSn', 
+      host='serverproyectoxdbbdd.postgres.database.azure.com', 
+      port= '5432'
+   )
+    return conn
 
 @app.route("/")
 def index():
@@ -561,6 +578,7 @@ def eliminar_qr():
         time.sleep(30)
     #endWhile
 
+#Rutas de prueba
 @app.route("/testview")
 def testview():
     conexion = conectar_db()
@@ -570,6 +588,38 @@ def testview():
     conexion.close()
     cursor.close()
     return render_template('/estacionamiento/view-detailed.html', find='', data=data, n_avisos=verificar_nalertas())
+
+
+@app.route("/testcamera")
+def testcamera():
+    return render_template('/test/camera.html')
+
+@app.route('/testpago/<id>')
+def testpago(id):
+    try:
+        conexion =  conectar_db()
+        cursor = conexion.cursor()
+        query = "SELECT * FROM ticket WHERE id='"+str(id)+"';"
+        cursor.execute(query)
+        data = cursor.fetchone()
+        print(data)
+        newdata = {
+            'id': data[0]
+        }
+        cursor.close()
+        conexion.commit()
+        conexion.close()
+        if data is None:
+            return render_template('/test/info.html', error='No encontrado')
+        return render_template('/test/info.html',codigo=id, data=data, newdata=newdata)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error durante la ejecucion de la consulta: ", error)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+    return render_template('/test/info.html', codigo='No encontrado')
 
 #Rutas de Login y Logout
 @app.route("/login")
@@ -623,3 +673,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

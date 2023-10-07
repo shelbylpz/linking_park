@@ -1,0 +1,36 @@
+{% include "basetest.html" %}
+
+<div class="container">
+    <h1>Se capturo un codigo QR</h1>
+    
+    {%if error%}
+    <p>Error: {{error}}</p>
+    {%else%}
+    <p>Codigo QR: {{ codigo }}</p>
+
+    <p>Id ticket: {{data[0]}}</p>
+    <p>Fecha de creacion: {{data[1]}}</p>
+    <p>fecha de validacion: 
+        {%if data[2]%}
+        {{data[2]}}
+        {%else%}
+        No ha sido validado
+        {%endif%}
+    </p>
+    <p>fecha de salida:
+        {%if data[3]%}
+        {{data[3]}}
+        {%else%}
+        No ha salido
+        {%endif%}
+    </p>
+    <p>Lugar asignado: {{data[4]}}</p>
+    
+    <img src="/qr/{{ data[0] }}.png"alt="QR">
+
+    <p>test: {{newdata['id']}}</p>
+    {%endif%}
+</div>
+
+
+{% include "end.html" %}
