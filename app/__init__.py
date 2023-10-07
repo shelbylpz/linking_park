@@ -1,14 +1,22 @@
 import os, shutil
 from math import floor,ceil
-from flask import Flask, render_template, request, redirect, session, send_from_directory
+from flask import Flask, render_template, request, redirect, session, send_from_directory, Response
 import psycopg2 
 import datetime
 import time
 import threading
 import pyqrcode
 import png
-from pyqrcode import QRCode
 from connect import conectar_db
+#Imports para la camara
+import cv2
+import pyqrcode
+import png
+from pyqrcode import QRCode #Esta tambien es escencial para el funcionamiento del programa
+import psycopg2
+from pyzbar.pyzbar import decode
+import numpy as np
+import time
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
@@ -561,6 +569,7 @@ def eliminar_qr():
         time.sleep(30)
     #endWhile
 
+#Rutas de prueba
 @app.route("/testview")
 def testview():
     conexion = conectar_db()
@@ -570,6 +579,57 @@ def testview():
     conexion.close()
     cursor.close()
     return render_template('/estacionamiento/view-detailed.html', find='', data=data, n_avisos=verificar_nalertas())
+
+def generate():
+    
+    cap = cv2.VideoCapture(0)
+    while True:
+    # Leemos los frames
+        ret, frame = cap.read()
+
+        # Leemos los codigos QR
+        for codes in decode(frame):
+            # Extraemos info
+            #info = codes.data
+
+            # Decodidficamos
+            info = codes.data.decode('utf-8')
+
+            # Tipo de persona LETRA
+            
+
+            # Extraemos coordenadas
+            pts = np.array([codes.polygon], np.int32)
+            xi, yi = codes.rect.left, codes.rect.top
+
+            # Redimensionamos
+            pts = pts.reshape((-1,1,2))
+
+            
+            cv2.polylines(frame, [pts], True, (255, 255, 0), 5)
+            cv2.putText(frame, str(info), (xi - 15, yi - 15), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 55, 0), 2)
+            print(" Numero de Ticket: ", str(info))
+            if(info != ''):
+                id_t = info
+                with app.app_context(), app.test_request_context():
+                    return render_template('/test/info.html', codigo=id_t)
+                    cap.release()
+            # Imprimimo
+            # Mostramos FPS
+            # Leemos teclado
+        (flag, encodeImage) = cv2.imencode(".jpg", frame)
+        if not flag:
+            continue
+        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodeImage) + b'\r\n')
+    cap.release()
+
+@app.route("/testcamera")
+def testcamera():
+    return render_template('/test/camera.html')
+
+@app.route("/video_feed")
+def video_feed():
+    return Response(generate(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 #Rutas de Login y Logout
 @app.route("/login")
@@ -623,3 +683,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
