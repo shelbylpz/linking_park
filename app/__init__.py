@@ -104,7 +104,7 @@ def estacionamiento_ver_search():
             cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+idTcket+"';")
             entrada = cursor.fetchone()
             if entrada[1] == 'null':
-                tiempo = update_time(entrada)
+                tiempo = update_time(entrada[0])
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(idTcket)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
             qrco = "./app/QRCodes/img/"+str(idTcket)+".png" #Se asigna la direccion de nuestro codigo qr a una variable
@@ -166,7 +166,7 @@ def estacionamiento_search_find():
             entrada = cursor.fetchone()
             print(entrada[1])
             if entrada[1] is None:
-                tiempo = update_time(entrada)
+                tiempo = update_time(entrada[0])
                 print(tiempo)
                 cursor.execute("UPDATE ticket SET tiempo='"+str(tiempo)+"' WHERE id='"+str(_lugar)+"';") #Actualizamos en la base de datos el tiempo que lleva el lugar ocupado
             qrco = str(route)+"/app/QRCodes/img/"+str(_lugar)+".png" # Asignamos direccion del codigo qr a variable
@@ -358,9 +358,10 @@ def configuracion_modificar_update():
         idticket = find[5]
         cursor.execute("SELECT entrada FROM ticket WHERE id='"+str(idticket)+"';")
         entrada = cursor.fetchone()
+        entrada = entrada[0]
         now = datetime.datetime.now()
         tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
-        tiempo = update_time(entrada=entrada)
+        tiempo = update_time(entrada)
         print(tiempo)
         cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
         cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(_id)+"';")
@@ -450,7 +451,7 @@ def configuracion_users_edit():
 
 def update_time(entrada):
     now = datetime.datetime.now()
-    delta = datetime.datetime.strptime(str(entrada[0]), "%Y-%m-%d %H:%M:%S.%f%z")#Transforma el string de la hora de entrada al tipo de dato datetime
+    delta = datetime.datetime.strptime(str(entrada), "%Y-%m-%d %H:%M:%S.%f%z")#Transforma el string de la hora de entrada al tipo de dato datetime
     fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f")#Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
     fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
     fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
@@ -460,6 +461,44 @@ def update_time(entrada):
     testi = time.strftime(":%H:%M:%S",time_oobj)
     tiempo = str(dias) + str(testi)
     return tiempo
+
+
+
+
+def obtener_conversiones(segundos, dias):
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    query = "SELECT * FROM conversion ORDER BY precio ASC;"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    cobro = 0
+    ld = len(data)
+    i = 0
+    for x in data:
+        if (segundos <= x[2] and dias <= x[3]):
+            cobro = x[1]
+            return cobro
+        if (i+1) == ld:
+            cobro = x[1]   
+        i = i + 1
+    return cobro
+
+def monto_pago(entrada):
+    now = datetime.datetime.now()
+    delta = datetime.datetime.strptime(str(entrada), "%Y-%m-%d %H:%M:%S.%f%z")#Transforma el string de la hora de entrada al tipo de dato datetime
+    fecha = delta.strftime("%Y-%m-%d %H:%M:%S.%f")#Transforma lo anterior a string con un nuevo formato de datetime para evitar corrupciones
+    fecha1 = datetime.datetime.strptime(str(fecha), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string nuevamente a un dato tipo datetime
+    fecha2 = datetime.datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f") #Convertimos el string a un dato tipo datetime
+    tiempo = fecha2 - fecha1  #Hacemos la resta teniendo como primer fecha la actual para no tener un valor negativo en el tiempo
+    segundos = int(tiempo.total_seconds())#da los segundos en el tiempo hasta llegar al dia
+    
+    dias = tiempo.days
+    cobro = obtener_conversiones(segundos, dias)
+
+    return cobro
 
 def datos_detalle_parking():
     conexion = conectar_db()
@@ -589,7 +628,6 @@ def testview():
     cursor.close()
     return render_template('/estacionamiento/view-detailed.html', find='', data=data, n_avisos=verificar_nalertas())
 
-
 @app.route("/testcamera")
 def testcamera():
     return render_template('/test/camera.html')
@@ -602,15 +640,21 @@ def testpago(id):
         query = "SELECT * FROM ticket WHERE id='"+str(id)+"';"
         cursor.execute(query)
         data = cursor.fetchone()
-        print(data)
-        newdata = {
-            'id': data[0]
-        }
         cursor.close()
         conexion.commit()
         conexion.close()
+        print(data)
         if data is None:
             return render_template('/test/info.html', error='No encontrado')
+        if data[2]:
+            return render_template('/test/info.html', error='Boleto Ya pagado')
+        newdata = {
+            'id': data[0],
+            'entrada': datetime.datetime.strptime(str(data[1]), "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S"),
+            'salida': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'tiempo': update_time(data[1]),
+            'cobro': monto_pago(data[1])
+        }
         return render_template('/test/info.html',codigo=id, data=data, newdata=newdata)
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
