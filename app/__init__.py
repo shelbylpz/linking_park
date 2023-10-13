@@ -351,7 +351,7 @@ def configuracion_modificar_update():
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(_id)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE hlugar SET estado=1, status='no-verficado', ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
+        cursor.execute("UPDATE hlugar SET estado=1, status='no-verificado', ticket='"+str(nticket)+"' WHERE id='"+str(_id)+"'")
         
         generator(nticket)
     else:
@@ -462,9 +462,6 @@ def update_time(entrada):
     tiempo = str(dias) + str(testi)
     return tiempo
 
-
-
-
 def obtener_conversiones(segundos, dias):
     conexion = conectar_db()
     cursor = conexion.cursor()
@@ -552,7 +549,6 @@ def verificar_nalertas():
     n_avisos = len(avisos)
     print("numero de aviso: "+str(n_avisos))
     return n_avisos
-
     
 #Hilos
 def verificar_tiempo():
@@ -640,6 +636,8 @@ def testpago(id):
         query = "SELECT * FROM ticket WHERE id='"+str(id)+"';"
         cursor.execute(query)
         data = cursor.fetchone()
+        cursor.execute("SELECT * FROM hlugar WHERE ticket='"+str(id)+"';")
+        lugar = cursor.fetchone()
         cursor.close()
         conexion.commit()
         conexion.close()
@@ -648,6 +646,8 @@ def testpago(id):
             return render_template('/test/info.html', error='No encontrado')
         if data[2]:
             return render_template('/test/info.html', error='Boleto Ya pagado')
+        if lugar[6] == "no-verificado":
+            return render_template('/test/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.')
         newdata = {
             'id': data[0],
             'entrada': datetime.datetime.strptime(str(data[1]), "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S"),
@@ -664,6 +664,32 @@ def testpago(id):
         if conexion is not None:
             conexion.close()
     return render_template('/test/info.html', codigo='No encontrado')
+
+@app.route('/testpago/<id>', methods=['POST'])
+def testpago_post(id):
+    pago = request.form['pago']
+    print('Se quizo hacer el pago de '+id)
+    print('Se ingreso esta cantidad '+pago)
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ticket WHERE id='"+str(id)+"';")
+    ticket = cursor.fetchone()
+    cursor.execute("SELECT * FROM hlugar WHERE ticket='"+str(id)+"';")
+    lugar = cursor.fetchone()
+    print(ticket)
+    print(lugar)
+    idticket = ticket[0]
+    entrada = ticket[1]
+    now = datetime.datetime.now()
+    tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
+    tiempo = update_time(entrada)
+    print(tiempo)
+    cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
+    cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(lugar[0])+"';")
+    cursor.execute("INSERT INTO public.pago(id_ticket, pago, fecha)	VALUES ('"+str(idticket)+"', "+str(pago)+", '"+str(tnow)+"');")
+    conexion.commit()
+    conexion.close()
+    return redirect('/')
 
 #Rutas de Login y Logout
 @app.route("/login")
