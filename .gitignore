@@ -1,4 +1,5 @@
 .env
 venv
-app/__pycache__/
 app/QRCodes/img/
+app/__pycache__/
+app/__pycache__/__init__.cpython-311.pyc
