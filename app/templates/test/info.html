@@ -38,22 +38,24 @@
                 <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{newdata['tiempo']}}">
               </div>
             </div>
+
+
             <div class="mb-2 row">
               <label for="" class="col-sm-4 col-form-label">Monto a pagar:</label>
               <div class="col-sm-8">
-                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="$ {{newdata['cobro']}}">
+                <input type="text" readonly class="form-control-plaintext" id="cobro" name="cobro" value="$ {{newdata['cobro']}}">
               </div>
             </div>
             <div class="mb-2 row">
               <label for="pago" class="col-sm-4 col-form-label">Pago:</label>
               <div class="col-sm-4">
-                $ <input type="number" class="form-input" id="pago" name="pago" step="0.1">
+                $ <input type="number" class="form-input" id="pago" name="pago" step="0.1" value="0">
               </div>
             </div>
             <div class="mb-2 row">
               <label for="" class="col-sm-4 col-form-label">Cambio:</label>
               <div class="col-sm-8">
-                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="$">
+                <input type="text" readonly class="form-control-plaintext" id="cambio" name="cambio" value="">
               </div>
             </div>
         </div>
@@ -62,13 +64,31 @@
             <div class="col-sm-4">
             </div>
             <div class="col-sm-4">
-              <button type="submit" class="btn btn-primary">Procesar pago</button>
+              <button type="submit" id="btn" class="btn btn-primary" disabled>Procesar pago</button>
             </div>
             <div class="col-sm-4">
             </div>
           </div>
         </div>
     </form>
+            <script>
+              var testPago = document.getElementById("pago");
+              if (testPago) {
+                  testPago.addEventListener('input',()=>{
+                    var cobro = parseFloat(document.getElementById('cobro').value.replace('$ ',''));
+                    var pago = parseFloat(document.getElementById('pago').value);
+                    var cambio = pago - cobro;
+                    console.log(cambio);
+                    console.log(`Cobro:${cobro}, Pago:${pago}, Cambio:${cambio}`);
+                    document.getElementById('cambio').value = `$ ${cambio.toFixed(2)}`;
+                    if(pago >= cobro){
+                      document.getElementById('btn').disabled = false;
+                    } else {
+                      document.getElementById('btn').disabled = true;
+                    }
+                  })}
+            </script>
+            
     {%endif%}
 </div>
 
