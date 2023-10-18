@@ -1,0 +1,100 @@
+{% include "base.html" %}
+
+<div class="container">
+
+<div class="card">
+  <div class="card-header">
+    Pago 
+  </div>
+  {%if error%}
+  <div class="card-body">
+    <h4 class="card-title" style="text-align: center;">Error: {{error}}</h4>
+  </div>
+  <div class="card-footer text-muted">
+    <a href="{{url_for('index')}}" class="btn btn-warning" role="button">Regresar</a>
+    
+</div>
+  {%else%}
+    <div class="card-body">
+        <h4 class="card-title" style="text-align: center;">Ticket: {{newdata['id']}}</h4>
+    </div>
+    <form action="/pago/{{newdata['id']}}" method="post">
+        <div class="card-body">    
+            <div class="mb-2 row">
+              <label for="" class="col-sm-4 col-form-label">Hora de entrada:</label>
+              <div class="col-sm-8">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{newdata['entrada']}}">
+              </div>
+            </div>        
+            <div class="mb-2 row">
+              <label for="" class="col-sm-4 col-form-label">Hora de Salida:</label>
+              <div class="col-sm-8">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{newdata['salida']}}">
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="" class="col-sm-4 col-form-label">Tiempo en estacionamiento:</label>
+              <div class="col-sm-8">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{newdata['tiempo']}}">
+              </div>
+            </div>
+
+
+            <div class="mb-2 row">
+              <label for="" class="col-sm-4 col-form-label">Monto a pagar:</label>
+              <div class="col-sm-8">
+                <input type="text" readonly class="form-control-plaintext" id="cobro" name="cobro" value="$ {{newdata['cobro']}}">
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="pago" class="col-sm-4 col-form-label">Pago:</label>
+              <div class="col-sm-4">
+                $ <input type="number" class="form-input" id="pago" name="pago" step="0.1" value="0">
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="" class="col-sm-4 col-form-label">Cambio:</label>
+              <div class="col-sm-8">
+                <input type="text" readonly class="form-control-plaintext" id="cambio" name="cambio" value="">
+              </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+          <div class="row">  
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-4">
+              <button type="submit" id="btn" class="btn btn-secondary" disabled>Procesar pago</button>
+            </div>
+            <div class="col-sm-4">
+            </div>
+          </div>
+        </div>
+    </form>
+            <script>
+              var testPago = document.getElementById("pago");
+              if (testPago) {
+                  testPago.addEventListener('input',()=>{
+                    var cobro = parseFloat(document.getElementById('cobro').value.replace('$ ',''));
+                    var pago = parseFloat(document.getElementById('pago').value);
+                    var cambio = pago - cobro;
+                    console.log(cambio);
+                    console.log(`Cobro:${cobro}, Pago:${pago}, Cambio:${cambio}`);
+                    document.getElementById('cambio').value = `$ ${cambio.toFixed(2)}`;
+                    if(pago >= cobro){
+                      document.getElementById('btn').disabled = false;
+                      document.getElementById('btn').className = 'btn btn-primary';
+                    } else {
+                      document.getElementById('btn').disabled = true;
+                      document.getElementById('btn').className = 'btn btn-secondary';
+                    }
+                  })}
+            </script>
+            
+    {%endif%}
+</div>
+
+</div>
+
+
+{% include "end.html" %}
