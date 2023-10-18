@@ -1,4 +1,4 @@
-{% include "basetest.html" %}
+{% include "base.html" %}
 
 <div class="container">
 
@@ -18,7 +18,7 @@
     <div class="card-body">
         <h4 class="card-title" style="text-align: center;">Ticket: {{newdata['id']}}</h4>
     </div>
-    <form action="/testpago/{{newdata['id']}}" method="post">
+    <form action="/pago/{{newdata['id']}}" method="post">
         <div class="card-body">    
             <div class="mb-2 row">
               <label for="" class="col-sm-4 col-form-label">Hora de entrada:</label>
@@ -64,7 +64,7 @@
             <div class="col-sm-4">
             </div>
             <div class="col-sm-4">
-              <button type="submit" id="btn" class="btn btn-primary" disabled>Procesar pago</button>
+              <button type="submit" id="btn" class="btn btn-secondary" disabled>Procesar pago</button>
             </div>
             <div class="col-sm-4">
             </div>
@@ -83,8 +83,10 @@
                     document.getElementById('cambio').value = `$ ${cambio.toFixed(2)}`;
                     if(pago >= cobro){
                       document.getElementById('btn').disabled = false;
+                      document.getElementById('btn').className = 'btn btn-primary';
                     } else {
                       document.getElementById('btn').disabled = true;
+                      document.getElementById('btn').className = 'btn btn-secondary';
                     }
                   })}
             </script>

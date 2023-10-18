@@ -628,8 +628,12 @@ def testview():
 def testcamera():
     return render_template('/test/camera.html')
 
-@app.route('/testpago/<id>')
-def testpago(id):
+@app.route('/pago/<id>')
+def pago(id):
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     try:
         conexion =  conectar_db()
         cursor = conexion.cursor()
@@ -655,7 +659,7 @@ def testpago(id):
             'tiempo': update_time(data[1]),
             'cobro': monto_pago(data[1])
         }
-        return render_template('/test/info.html',codigo=id, data=data, newdata=newdata)
+        return render_template('/pago/info.html',codigo=id, data=data, newdata=newdata)
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -663,10 +667,14 @@ def testpago(id):
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/test/info.html', codigo='No encontrado')
+    return render_template('/pago/info.html', codigo='No encontrado')
 
-@app.route('/testpago/<id>', methods=['POST'])
-def testpago_post(id):
+@app.route('/pago/<id>', methods=['POST'])
+def pago_post(id):
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     pago = request.form['pago']
     print('Se quizo hacer el pago de '+id)
     print('Se ingreso esta cantidad '+pago)
