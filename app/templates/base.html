@@ -18,12 +18,19 @@
            window.location.reload(1);
         },  60000);
         </script>
+    {% else %}{% if newdata %}
+    <script>
+        setTimeout(function(){
+           window.location.reload(1);
+        },  300000);
+        </script>
     {% else %}
     <script>
         setTimeout(function(){
            window.location.reload(1);
         },  30000);
         </script>
+    {% endif %}
     {% endif %}
     {% endif %}
 
@@ -77,6 +84,7 @@
                             <li ><a class="dropdown-item" href="/configuracion/borrar">Eliminar lugar</a></li>
                             <li ><a class="dropdown-item" href="/configuracion/modificar">Modificar lugar</a></li>
                             <li ><a class="dropdown-item" href="/configuracion/usuarios">Admninistrar Usuarios</a></li>
+                            <li ><a class="dropdown-item" href="/configuracion/precios">Precios</a></li>
                         </ul>
                     </li>
                     {% endif %}

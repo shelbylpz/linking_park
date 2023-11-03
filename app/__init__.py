@@ -6,16 +6,9 @@ import datetime
 import time
 import threading
 import pyqrcode
+from pyqrcode import QRCode #Esta tambien es escencial para el funcionamiento del programa
 import png
 #Imports para la camara
-import cv2
-import pyqrcode
-import png
-from pyqrcode import QRCode #Esta tambien es escencial para el funcionamiento del programa
-import psycopg2
-from pyzbar.pyzbar import decode
-import numpy as np
-import time
 
 app = Flask(__name__)
 app.secret_key="thelmamada"
@@ -32,8 +25,7 @@ def conectar_db():
 
 @app.route("/")
 def index():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     print(n_avisos)
     return render_template("index.html", n_avisos=n_avisos, usuario=session['usuario'])
@@ -54,16 +46,85 @@ def css_link(archivocss):
 #Rutas de Estacionamiento
 @app.route("/estacionamiento/")
 def estacionamiento():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     return render_template("estacionamiento.html", n_avisos=n_avisos, usuario=session['usuario'])
+
+#Rutas pago
+
+@app.route('/pago/<id>')
+def pago(id):
+    verif_user_login()
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
+    try:
+        conexion =  conectar_db()
+        cursor = conexion.cursor()
+        query = "SELECT * FROM ticket WHERE id='"+str(id)+"';"
+        cursor.execute(query)
+        data = cursor.fetchone()
+        cursor.execute("SELECT * FROM hlugar WHERE ticket='"+str(id)+"';")
+        lugar = cursor.fetchone()
+        cursor.close()
+        conexion.commit()
+        conexion.close()
+        print(data)
+        if data is None:
+            return render_template('/test/info.html', error='No encontrado')
+        if data[2]:
+            return render_template('/test/info.html', error='Boleto Ya pagado')
+        if lugar[6] == "no-verificado":
+            return render_template('/test/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.')
+        newdata = {
+            'id': data[0],
+            'entrada': datetime.datetime.strptime(str(data[1]), "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S"),
+            'salida': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'tiempo': update_time(data[1]),
+            'cobro': monto_pago(data[1])
+        }
+        return render_template('/pago/info.html',codigo=id, newdata=newdata)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error durante la ejecucion de la consulta: ", error)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+    return render_template('/pago/info.html', codigo='No encontrado')
+
+@app.route('/pago/<id>', methods=['POST'])
+def pago_post(id):
+    verif_user_login()
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
+    pago = request.form['pago']
+    print('Se quizo hacer el pago de '+id)
+    print('Se ingreso esta cantidad '+pago)
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ticket WHERE id='"+str(id)+"';")
+    ticket = cursor.fetchone()
+    cursor.execute("SELECT * FROM hlugar WHERE ticket='"+str(id)+"';")
+    lugar = cursor.fetchone()
+    print(ticket)
+    print(lugar)
+    idticket = ticket[0]
+    entrada = ticket[1]
+    now = datetime.datetime.now()
+    tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
+    tiempo = update_time(entrada)
+    print(tiempo)
+    cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
+    cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(lugar[0])+"';")
+    cursor.execute("INSERT INTO public.pago(id_ticket, pago, fecha)	VALUES ('"+str(idticket)+"', "+str(pago)+", '"+str(tnow)+"');")
+    conexion.commit()
+    conexion.close()
+    return redirect('/')
 
 #Entradas y salidas
 @app.route("/estacionamiento/inout")
 def entradas_salidas():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     conexion = conectar_db()
     cursor = conexion.cursor()
@@ -76,8 +137,7 @@ def entradas_salidas():
 #Seccion de visualizar el estacionamiento
 @app.route('/estacionamiento/ver')
 def estacionamiento_ver():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     find=''
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
@@ -86,8 +146,7 @@ def estacionamiento_ver():
 #Busqueda de un lugar dentro de visualizar
 @app.route('/estacionamiento/ver/search', methods=["POST"])
 def estacionamiento_ver_search():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     try:
         _lugar = request.form['txtSearch']
@@ -129,8 +188,7 @@ def estacionamiento_ver_search():
 
 @app.route('/estacionamiento/search')
 def estacionamiento_search():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     
     n_avisos = verificar_nalertas()
     find = ''
@@ -139,8 +197,7 @@ def estacionamiento_search():
 
 @app.route('/estacionamiento/search/find', methods=['POST'])
 def estacionamiento_search_find():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     try:
         _lugar = request.form['txtSearch']
@@ -193,15 +250,13 @@ def estacionamiento_search_find():
 
 @app.route('/alertas')
 def avisos():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     return render_template("/notificaciones/alertas.html", n_avisos=n_avisos, usuario=session['usuario'])
 
 @app.route("/alertas/<table>")
 def avisos_seleccion(table):
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     datos, tipo = datos_tipo(table)
     print(datos)
@@ -223,8 +278,7 @@ def datos_tipo(table):
 
 @app.route('/alertas/informar', methods=["POST"])
 def avisos_informar():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     n_avisos = verificar_nalertas()
     print("entro")
     _id = request.form['txtID']
@@ -251,8 +305,7 @@ def avisos_informar():
 #Rutas de configuraciones
 @app.route('/configuracion/agregar')
 def configuracion_agregar():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     n_avisos = verificar_nalertas()
@@ -261,8 +314,7 @@ def configuracion_agregar():
 
 @app.route('/configuracion/agregar/add', methods=['POST'])
 def configuracion_agregar_add():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     _seccion = request.form['Seccion']
@@ -289,8 +341,7 @@ def configuracion_agregar_add():
 
 @app.route('/configuracion/borrar')
 def configuracion_borrar():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     n_avisos = verificar_nalertas()
@@ -299,8 +350,7 @@ def configuracion_borrar():
 
 @app.route('/configuracion/borrar/delete', methods=['POST'])
 def configuracion_borrar_delete():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     _id = request.form['txtId']
@@ -324,8 +374,7 @@ def configuracion_borrar_delete():
 
 @app.route('/configuracion/modificar')
 def configuracion_modificar():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
@@ -333,8 +382,7 @@ def configuracion_modificar():
 
 @app.route('/configuracion/modificar/update', methods=['POST'])
 def configuracion_modificar_update():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     _id = request.form['txtId']
@@ -372,18 +420,14 @@ def configuracion_modificar_update():
 
 @app.route("/configuracion/usuarios")
 def configuracion_usuarios():
-    if not 'login' in session:
-        return redirect('/login')
+    verif_user_login()
     if session['usuario'] != 'Administrador':
         return redirect('/')
     return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), usuario=session['usuario'], n_avisos=verificar_nalertas())
 
 @app.route('/configuracion/usuarios/add', methods=['POST'])
 def configuracion_usuarios_add():
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador' :
-        return redirect('/')
+    verif_user_login_admin()
     _username = request.form['txtNombre']
     _password = request.form['txtPassword']
     _tipo = request.form.get("txtTipo")
@@ -410,10 +454,7 @@ def configuracion_usuarios_add():
 
 @app.route("/configuracion/usuarios/delete", methods=['POST'])
 def configuracion_users_delete():
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador' :
-        return redirect('/')
+    verif_user_login_admin()
     _id = request.form['txtID']
     print(session["id"])
     print(_id)
@@ -440,13 +481,24 @@ def configuracion_users_delete():
 
 @app.route("/configuracion/usuarios/edit", methods=['POST'])
 def configuracion_users_edit():
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador' :
-        return redirect('/')
+    verif_user_login_admin()
     _id = request.form['txtID']
     print(session["id"])
     print(_id)
+
+@app.route("/configuracion/precios")
+def configuracion_precios():
+    verif_user_login_admin()
+    data = datos_pago_parking()
+    precios = []
+    for dato in data:
+        segundos = dato[2]
+        tiempo = str(datetime.timedelta(seconds=segundos))
+        new = [dato[0],dato[1],tiempo]
+        precios.append(new)
+    return render_template('/configuracion/precios.html',precios=precios, n_avisos=verificar_nalertas())
+    
+
 #Funciones modulacion
 
 def update_time(entrada):
@@ -463,14 +515,7 @@ def update_time(entrada):
     return tiempo
 
 def obtener_conversiones(segundos, dias):
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    query = "SELECT * FROM conversion ORDER BY precio ASC;"
-    cursor.execute(query)
-    data = cursor.fetchall()
-    conexion.commit()
-    cursor.close()
-    conexion.close()
+    data = datos_pago_parking()
     cobro = 0
     ld = len(data)
     i = 0
@@ -534,6 +579,17 @@ def data_for_users_table():
     conexion.close()
     return data
 
+def datos_pago_parking():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    query = "SELECT * FROM conversion ORDER BY precio ASC;"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    return data
+
 route = os.path.abspath(os.getcwd())
 
 def generator(id):
@@ -550,6 +606,16 @@ def verificar_nalertas():
     print("numero de aviso: "+str(n_avisos))
     return n_avisos
     
+def verif_user_login():
+    if not 'login' in session:
+        return redirect('/login')
+    
+def verif_user_login_admin():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador' :
+        return redirect('/')
+
 #Hilos
 def verificar_tiempo():
     while True:
@@ -623,81 +689,6 @@ def testview():
     conexion.close()
     cursor.close()
     return render_template('/estacionamiento/view-detailed.html', find='', data=data, n_avisos=verificar_nalertas())
-
-@app.route("/testcamera")
-def testcamera():
-    return render_template('/test/camera.html')
-
-@app.route('/pago/<id>')
-def pago(id):
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador':
-        return redirect('/')
-    try:
-        conexion =  conectar_db()
-        cursor = conexion.cursor()
-        query = "SELECT * FROM ticket WHERE id='"+str(id)+"';"
-        cursor.execute(query)
-        data = cursor.fetchone()
-        cursor.execute("SELECT * FROM hlugar WHERE ticket='"+str(id)+"';")
-        lugar = cursor.fetchone()
-        cursor.close()
-        conexion.commit()
-        conexion.close()
-        print(data)
-        if data is None:
-            return render_template('/test/info.html', error='No encontrado')
-        if data[2]:
-            return render_template('/test/info.html', error='Boleto Ya pagado')
-        if lugar[6] == "no-verificado":
-            return render_template('/test/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.')
-        newdata = {
-            'id': data[0],
-            'entrada': datetime.datetime.strptime(str(data[1]), "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S"),
-            'salida': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'tiempo': update_time(data[1]),
-            'cobro': monto_pago(data[1])
-        }
-        return render_template('/pago/info.html',codigo=id, data=data, newdata=newdata)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print("Error durante la ejecucion de la consulta: ", error)
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if conexion is not None:
-            conexion.close()
-    return render_template('/pago/info.html', codigo='No encontrado')
-
-@app.route('/pago/<id>', methods=['POST'])
-def pago_post(id):
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador':
-        return redirect('/')
-    pago = request.form['pago']
-    print('Se quizo hacer el pago de '+id)
-    print('Se ingreso esta cantidad '+pago)
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM ticket WHERE id='"+str(id)+"';")
-    ticket = cursor.fetchone()
-    cursor.execute("SELECT * FROM hlugar WHERE ticket='"+str(id)+"';")
-    lugar = cursor.fetchone()
-    print(ticket)
-    print(lugar)
-    idticket = ticket[0]
-    entrada = ticket[1]
-    now = datetime.datetime.now()
-    tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
-    tiempo = update_time(entrada)
-    print(tiempo)
-    cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
-    cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(lugar[0])+"';")
-    cursor.execute("INSERT INTO public.pago(id_ticket, pago, fecha)	VALUES ('"+str(idticket)+"', "+str(pago)+", '"+str(tnow)+"');")
-    conexion.commit()
-    conexion.close()
-    return redirect('/')
 
 #Rutas de Login y Logout
 @app.route("/login")
