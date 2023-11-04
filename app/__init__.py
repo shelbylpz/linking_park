@@ -823,10 +823,10 @@ def logout():
     return redirect("/login")
 
 #hilos
-#hilo1 = threading.Timer(5, function=verificar_tiempo)
-#hilo2 = threading.Timer(10, function=eliminar_qr)
-#hilo1.start()
-#hilo2.start()
+hilo1 = threading.Timer(5, function=verificar_tiempo)
+hilo2 = threading.Timer(10, function=eliminar_qr)
+hilo1.start()
+hilo2.start()
 
 if __name__ == '__main__':
     app.run(debug=True)
