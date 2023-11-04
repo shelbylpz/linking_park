@@ -1,4 +1,6 @@
 {%include 'base.html'%}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/precios.css') }}">
+
 <div class="container">
     {% if mensaje %}
     <div class="alert alert-{{ mensaje[0] }} alert-dismissible fade show" role="alert">
@@ -8,10 +10,18 @@
       </div>
     <br>
     {% endif %}
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong><br>
+        <p>{{ error }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <br>
+    {% endif %}
     <div class="row">
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-10">
+        <div class="col-md-12">
+            <h2>Precios</h2>
+            <br>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#new">
                 Nuevo Precio
@@ -27,7 +37,8 @@
                                   </div>
                           <div class="modal-body">
                               <div class="container-fluid">
-                                  <form action="/configuracion/precios/add" method="post" enctype="multipart/form-data">
+                                  <form action="/configuracion/precios" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="accion" value="agregar">
                                       <div class="mb-3">
                                           <label for="txtPrecio" class="form-label">Precio:</label>
                                           <input type="number" step="1" class="form-control" name="txtPrecio" id="txtPrecio"aria-describedby="helpId" placeholder="Escriba el precio" required>
@@ -44,8 +55,8 @@
                                   </div>
                               </div>
                               <div class="modal-footer container-fluid">
-                                  <button type="submit" class="btn btn-outline-warning">Agregar</button>
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                  <button type="submit" class="btn btn-outline-success">Agregar</button>
+                                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
                               </form>
                           </div>
                       </div>
@@ -65,9 +76,12 @@
                     <tr >
                         <td>{{ precio[1] }}</td>
                         <td>{{ precio[2] }}</td>
-                        <td>
-                            holi
-                            </ul>
+                        <td class="acciones">
+                            <form action="/configuracion/precios" method="post">
+                                <input type="hidden" name="id" value="{{ precio[0] }}">
+                                <input type="hidden" name="accion" value="eliminar">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -77,85 +91,5 @@
     </div>
 </div>
 
+<script src="{{url_for('static', filename='scripts/precios.js')}}"></script>
 {%include 'end.html'%}
-
-<script>
-    const segundoInput = document.getElementById('segundo');
-    const minutoInput = document.getElementById('minuto');
-    const horaInput = document.getElementById('hora');
-    const diaInput = document.getElementById('dia');
-
-    segundoInput.addEventListener('input', () => {
-        if (segundoInput.value >= 60) {
-            segundoInput.value = 0;
-            minutoInput.value++;
-        }
-        if(segundoInput.value < 0){
-            segundoInput.value = 59;
-            minutoInput.value--;
-        }
-        if(minutoInput.value < 0){
-            minutoInput.value = 59;
-            horaInput.value--;
-        }
-        if(horaInput.value < 0){
-            horaInput.value = 23;
-            diaInput.value--;
-        }
-        if(diaInput.value < 0){
-            diaInput.value = 0;
-        }
-        if(minutoInput.value >= 60){
-            minutoInput.value = 0;
-            horaInput.value++;
-        }
-        if(horaInput.value >= 24){
-            horaInput.value = 0;
-            diaInput.value++;
-        }
-    });
-
-    minutoInput.addEventListener('input', () => {
-        if (minutoInput.value >= 60) {
-            minutoInput.value = 0;
-            horaInput.value++;
-        }
-        if(minutoInput.value < 0){
-            minutoInput.value = 59;
-            horaInput.value--;
-        }
-        if(horaInput.value < 0){
-            horaInput.value = 23;
-            diaInput.value--;
-        }
-        if(diaInput.value < 0){
-            diaInput.value = 0;
-        }
-        if(horaInput.value >= 24){
-            horaInput.value = 0;
-            diaInput.value++;
-        }
-
-    });
-    
-    horaInput.addEventListener('input', () => {
-        if (horaInput.value >= 24) {
-            horaInput.value = 0;
-            diaInput.value++;
-        }
-        if(horaInput.value < 0){
-            horaInput.value = 23;
-            diaInput.value--;
-        }
-        if(diaInput.value < 0){
-            diaInput.value = 0;
-        }
-    });
-
-    diaInput.addEventListener('input', () => {
-        if(diaInput.value < 0){
-            diaInput.value = 0;
-        }
-    });
-
-</script>

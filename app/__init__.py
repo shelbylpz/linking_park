@@ -23,9 +23,11 @@ def conectar_db():
    )
     return conn
 
+
 @app.route("/")
 def index():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     print(n_avisos)
     return render_template("index.html", n_avisos=n_avisos, usuario=session['usuario'])
@@ -46,7 +48,8 @@ def css_link(archivocss):
 #Rutas de Estacionamiento
 @app.route("/estacionamiento/")
 def estacionamiento():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     return render_template("estacionamiento.html", n_avisos=n_avisos, usuario=session['usuario'])
 
@@ -54,7 +57,8 @@ def estacionamiento():
 
 @app.route('/pago/<id>')
 def pago(id):
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     try:
@@ -70,11 +74,11 @@ def pago(id):
         conexion.close()
         print(data)
         if data is None:
-            return render_template('/test/info.html', error='No encontrado')
+            return render_template('/pago/info.html', error='No encontrado')
         if data[2]:
-            return render_template('/test/info.html', error='Boleto Ya pagado')
+            return render_template('/pago/info.html', error='Boleto Ya pagado')
         if lugar[6] == "no-verificado":
-            return render_template('/test/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.')
+            return render_template('/pago/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.')
         newdata = {
             'id': data[0],
             'entrada': datetime.datetime.strptime(str(data[1]), "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S"),
@@ -94,7 +98,8 @@ def pago(id):
 
 @app.route('/pago/<id>', methods=['POST'])
 def pago_post(id):
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     pago = request.form['pago']
@@ -124,7 +129,8 @@ def pago_post(id):
 #Entradas y salidas
 @app.route("/estacionamiento/inout")
 def entradas_salidas():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     conexion = conectar_db()
     cursor = conexion.cursor()
@@ -137,7 +143,8 @@ def entradas_salidas():
 #Seccion de visualizar el estacionamiento
 @app.route('/estacionamiento/ver')
 def estacionamiento_ver():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     find=''
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
@@ -146,7 +153,8 @@ def estacionamiento_ver():
 #Busqueda de un lugar dentro de visualizar
 @app.route('/estacionamiento/ver/search', methods=["POST"])
 def estacionamiento_ver_search():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     try:
         _lugar = request.form['txtSearch']
@@ -188,7 +196,8 @@ def estacionamiento_ver_search():
 
 @app.route('/estacionamiento/search')
 def estacionamiento_search():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     
     n_avisos = verificar_nalertas()
     find = ''
@@ -197,7 +206,8 @@ def estacionamiento_search():
 
 @app.route('/estacionamiento/search/find', methods=['POST'])
 def estacionamiento_search_find():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     try:
         _lugar = request.form['txtSearch']
@@ -250,13 +260,15 @@ def estacionamiento_search_find():
 
 @app.route('/alertas')
 def avisos():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     return render_template("/notificaciones/alertas.html", n_avisos=n_avisos, usuario=session['usuario'])
 
 @app.route("/alertas/<table>")
 def avisos_seleccion(table):
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     datos, tipo = datos_tipo(table)
     print(datos)
@@ -278,7 +290,8 @@ def datos_tipo(table):
 
 @app.route('/alertas/informar', methods=["POST"])
 def avisos_informar():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     n_avisos = verificar_nalertas()
     print("entro")
     _id = request.form['txtID']
@@ -305,7 +318,8 @@ def avisos_informar():
 #Rutas de configuraciones
 @app.route('/configuracion/agregar')
 def configuracion_agregar():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     n_avisos = verificar_nalertas()
@@ -314,7 +328,8 @@ def configuracion_agregar():
 
 @app.route('/configuracion/agregar/add', methods=['POST'])
 def configuracion_agregar_add():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     _seccion = request.form['Seccion']
@@ -341,7 +356,8 @@ def configuracion_agregar_add():
 
 @app.route('/configuracion/borrar')
 def configuracion_borrar():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     n_avisos = verificar_nalertas()
@@ -350,7 +366,8 @@ def configuracion_borrar():
 
 @app.route('/configuracion/borrar/delete', methods=['POST'])
 def configuracion_borrar_delete():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     _id = request.form['txtId']
@@ -374,7 +391,8 @@ def configuracion_borrar_delete():
 
 @app.route('/configuracion/modificar')
 def configuracion_modificar():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     Autos, aLenght, anL, Discapacitados, dLenght, dnL, Motos, mLenght, mnL = data_for_view_parking()
@@ -382,7 +400,8 @@ def configuracion_modificar():
 
 @app.route('/configuracion/modificar/update', methods=['POST'])
 def configuracion_modificar_update():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     _id = request.form['txtId']
@@ -420,14 +439,18 @@ def configuracion_modificar_update():
 
 @app.route("/configuracion/usuarios")
 def configuracion_usuarios():
-    verif_user_login()
+    if not 'login' in session:
+        return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
     return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), usuario=session['usuario'], n_avisos=verificar_nalertas())
 
 @app.route('/configuracion/usuarios/add', methods=['POST'])
 def configuracion_usuarios_add():
-    verif_user_login_admin()
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     _username = request.form['txtNombre']
     _password = request.form['txtPassword']
     _tipo = request.form.get("txtTipo")
@@ -454,7 +477,10 @@ def configuracion_usuarios_add():
 
 @app.route("/configuracion/usuarios/delete", methods=['POST'])
 def configuracion_users_delete():
-    verif_user_login_admin()
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     _id = request.form['txtID']
     print(session["id"])
     print(_id)
@@ -481,23 +507,77 @@ def configuracion_users_delete():
 
 @app.route("/configuracion/usuarios/edit", methods=['POST'])
 def configuracion_users_edit():
-    verif_user_login_admin()
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
     _id = request.form['txtID']
     print(session["id"])
     print(_id)
 
 @app.route("/configuracion/precios")
 def configuracion_precios():
-    verif_user_login_admin()
-    data = datos_pago_parking()
-    precios = []
-    for dato in data:
-        segundos = dato[2]
-        tiempo = str(datetime.timedelta(seconds=segundos))
-        new = [dato[0],dato[1],tiempo]
-        precios.append(new)
-    return render_template('/configuracion/precios.html',precios=precios, n_avisos=verificar_nalertas())
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
+    precios = datos_pago_parking_fixed()
+    return render_template('/configuracion/precios.html', usuario=session['usuario'], precios=precios, n_avisos=verificar_nalertas())
     
+@app.route("/configuracion/precios", methods=['POST'])
+def configuracion_precios_add():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
+    accion = request.form['accion']
+    if accion == 'eliminar':
+        return configuracion_precios_delete(request.form['id'])
+    if accion == 'agregar':    
+        _precio = request.form['txtPrecio']
+        _dia = request.form['dia']
+        _hora = request.form['hora']
+        _minuto = request.form['minuto']
+        _segundo = request.form['segundo']
+        _tiempo = int(_dia)*86400 + int(_hora)*3600 + int(_minuto)*60 + int(_segundo)
+        print(_precio)
+        print(_tiempo)
+        try:
+            conexion = conectar_db()
+            cursor = conexion.cursor()
+            query = "INSERT INTO conversion VALUES(DEFAULT,'"+str(_precio)+"','"+str(_tiempo)+"','"+str(_dia)+"');"
+            cursor.execute(query)
+            conexion.commit()
+            conexion.close()
+            mensaje = ["success","Precio agregado correctamente!", ""]
+            return render_template('/configuracion/precios.html', mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas())
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("Error durante la ejecucion de la consulta: ", error)
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None:
+                conexion.close()
+        return render_template('/configuracion/precios.html', error=True, usuario=session['usuario'], precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas())
+
+def configuracion_precios_delete(id):
+    try:
+        conexion = conectar_db()
+        cursor = conexion.cursor()
+        query = "DELETE FROM conversion WHERE id="+str(id)+";"
+        cursor.execute(query)
+        conexion.commit()
+        conexion.close()
+        mensaje = ["success","Precio eliminado!","El precio ha sido eliminado correctamente!"]
+        return render_template('/configuracion/precios.html',mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas())
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error durante la ejecucion de la consulta: ", error)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
+    return render_template('/configuracion/precios.html', precios=datos_pago_parking_fixed(), usuario=session['usuario'], n_avisos=verificar_nalertas())
 
 #Funciones modulacion
 
@@ -590,6 +670,23 @@ def datos_pago_parking():
     conexion.close()
     return data
 
+def datos_pago_parking_fixed():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    query = "SELECT * FROM conversion ORDER BY precio ASC;"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    precios = []
+    for dato in data:
+        segundos = dato[2]
+        tiempo = str(datetime.timedelta(seconds=segundos))
+        new = [dato[0],dato[1],tiempo]
+        precios.append(new)
+    return precios
+
 route = os.path.abspath(os.getcwd())
 
 def generator(id):
@@ -606,15 +703,6 @@ def verificar_nalertas():
     print("numero de aviso: "+str(n_avisos))
     return n_avisos
     
-def verif_user_login():
-    if not 'login' in session:
-        return redirect('/login')
-    
-def verif_user_login_admin():
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador' :
-        return redirect('/')
 
 #Hilos
 def verificar_tiempo():
