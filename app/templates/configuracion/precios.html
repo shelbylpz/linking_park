@@ -1,0 +1,95 @@
+{%include 'base.html'%}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/precios.css') }}">
+
+<div class="container">
+    {% if mensaje %}
+    <div class="alert alert-{{ mensaje[0] }} alert-dismissible fade show" role="alert">
+        <strong>{{ mensaje[1] }}</strong><br>
+        <p>{{ mensaje[2] }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <br>
+    {% endif %}
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong><br>
+        <p>{{ error }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <br>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Precios</h2>
+            <br>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#new">
+                Nuevo Precio
+              </button>
+              
+              <!-- Modal -->
+              <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                              <div class="modal-header">
+                                      <h5 class="modal-title" id="modalTitleId">Crear nuevo precio</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                          <div class="modal-body">
+                              <div class="container-fluid">
+                                  <form action="/configuracion/precios" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="accion" value="agregar">
+                                      <div class="mb-3">
+                                          <label for="txtPrecio" class="form-label">Precio:</label>
+                                          <input type="number" step="1" class="form-control" name="txtPrecio" id="txtPrecio"aria-describedby="helpId" placeholder="Escriba el precio" required>
+                                      </div>
+                                      <div class="mb-3">
+                                          <label for="txtTiempo" class="form-label">Tiempo (Dias / Horas / Minutos / Segundos):</label>
+                                          <div class="input-group">
+                                              <input type="number" class="form-control" name="dia" id="dia"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
+                                              <input type="number" class="form-control" name="hora" id="hora"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
+                                              <input type="number" class="form-control" name="minuto" id="minuto"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
+                                              <input type="number" class="form-control" name="segundo" id="segundo"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="modal-footer container-fluid">
+                                  <button type="submit" class="btn btn-outline-success">Agregar</button>
+                                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            <br><br>  
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Precio</th>
+                        <th>Tiempo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for precio in precios %}
+                    <tr >
+                        <td>{{ precio[1] }}</td>
+                        <td>{{ precio[2] }}</td>
+                        <td class="acciones">
+                            <form action="/configuracion/precios" method="post">
+                                <input type="hidden" name="id" value="{{ precio[0] }}">
+                                <input type="hidden" name="accion" value="eliminar">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="{{url_for('static', filename='scripts/precios.js')}}"></script>
+{%include 'end.html'%}

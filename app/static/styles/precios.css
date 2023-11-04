@@ -1,0 +1,36 @@
+.table{
+    border: 1px solid black;
+}
+.table thead{
+    background-color: rgb(47, 56, 70);
+    color: white;
+}
+.table tbody{
+    background-color: rgb(117, 134, 161);
+    color:white;
+}
+
+.card-header{
+    background-color: rgb(47, 56, 70);
+    color: white;
+}
+.card-body{
+    background-color: rgb(117, 134, 161);
+    color:white;
+}
+.card-footer{
+    background-color: rgb(47, 56, 70);
+}
+
+td{
+    text-align: center;
+}
+
+td.acciones {
+    display: flex;
+    margin-bottom: 5px;
+    justify-content: center;
+}
+th {
+    text-align: center;
+}
