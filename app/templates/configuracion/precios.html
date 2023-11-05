@@ -23,7 +23,10 @@
             <h2>Precios</h2>
             <br>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#new">
+            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#new">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                  </svg>
                 Nuevo Precio
               </button>
               
@@ -63,7 +66,7 @@
                   </div>
               </div>
             <br><br>  
-            <table class="table table-bordered">
+            <table class="table table-borderless">
                 <thead>
                     <tr>
                         <th>Precio</th>
@@ -80,7 +83,7 @@
                             <form action="/configuracion/precios" method="post">
                                 <input type="hidden" name="id" value="{{ precio[0] }}">
                                 <input type="hidden" name="accion" value="eliminar">
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                <button type="submit" class="btn btn-outline-danger">Eliminar</button>
                             </form>
                         </td>
                     </tr>
