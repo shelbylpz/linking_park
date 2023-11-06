@@ -1,33 +1,82 @@
-.table{
-    border: 1px solid black;
-}
-.table thead{
-    background-color: rgb(47, 56, 70);
-    color: white;
-}
-.table tbody{
-    background-color: rgb(117, 134, 161);
-    color:white;
-}
-
 .card-header{
-    background-color: rgb(47, 56, 70);
+    border: 1px solid black;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15); /* Sombra más grande */
+    overflow: hidden; /* Esto es para que la sombra se aplique correctamente */
+    border-bottom: 1px solid black;
+    background-color: black;
     color: white;
 }
 .card-body{
-    background-color: rgb(117, 134, 161);
-    color:white;
+    border: 2px solid black;
+    background-color: #313e66;
+    font-weight: 600;
+    color: rgb(255, 255, 255);
 }
 .card-footer{
-    background-color: rgb(47, 56, 70);
+    border: 1px solid black;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15); /* Sombra más grande */
+    overflow: hidden; /* Esto es para que la sombra se aplique correctamente */
+    border-bottom: 1px solid black;
+    background-color: black;
+    color: white;
 }
 
-ul.acciones {
+.btn btn-outline-primary btn-lg {
     display: flex;
-    list-style: none;
-    margin-bottom: 5px;
-    padding-left: 1px;
+    align-items: center;
 }
-ul.acciones li{
-    margin: auto;
+
+.btn svg {
+    order: -1; /* Esto moverá el SVG antes del texto */
+    margin-right: 5px; /* Esto añadirá un poco de espacio entre el SVG y el texto */
+    margin-bottom: 4px;
+}
+
+
+.table {
+    border: 1px solid black;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15); /* Sombra más grande */
+    overflow: hidden; /* Esto es para que la sombra se aplique correctamente */
+    margin-bottom: 5rem;
+}
+.table thead {
+    border-bottom: 1px solid black;
+    background-color: black;
+    color: white;
+}
+
+.table tbody {
+    border: 2px solid black;
+    background-color: #313e66;
+    font-weight: 600;
+    color: rgb(255, 255, 255);
+}
+
+.table tbody tr:hover {
+    background-color: #252e47; /* Cambia el color de fondo al pasar el mouse */
+}
+
+td {
+    text-align: center;
+    vertical-align: middle; /* Esto centra verticalmente el contenido */
+    border: 1px solid black; /* Bordes para las celdas */
+}
+
+
+th {
+    text-align: center;
+    border: 1px solid black; /* Bordes para las celdas de encabezado */
+}
+
+.table tbody tr {
+    transition: background-color 0.3s ease; /* Agrega suavidad al cambio de color */
+}
+
+
+td.acciones {
+    margin: 0;
+    vertical-align: top; /* Alinea el contenido en la parte superior */
 }

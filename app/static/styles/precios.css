@@ -15,11 +15,13 @@
     align-items: center;
 }
 
-.btn svg {
-    order: -1; /* Esto moverá el SVG antes del texto */
-    margin-right: 5px; /* Esto añadirá un poco de espacio entre el SVG y el texto */
-    margin-bottom: 4px;
+.btn i {
+        order: -1;
+        margin-right: 5px; /* Esto añadirá un poco de espacio entre el SVG y el texto */
+        margin-bottom: 2px;
+        align-items: center;
 }
+
 
 
 .table {

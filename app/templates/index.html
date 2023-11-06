@@ -6,32 +6,33 @@
 
 <div class="container">
     <div class="row">
-        <h2>Estacionamiento</h2>
+        <h2><span class="material-symbols-outlined">local_parking</span>Estacionamiento</h2>
         <div class="container">
-            <a href="/estacionamiento/inout" class="btn btn-warning">Entradas / Salidas</a>
-            <a href="/estacionamiento/ver" class="btn btn-warning">Visualizar Estacionamiento</a>
-            <a href="/estacionamiento/search" class="btn btn-warning">Buscar lugar / ticket</a>
+            <a href="/estacionamiento/inout" class="btn btn-warning"><span class="material-symbols-outlined">table_view</span>Entradas / Salidas</a>
+            <a href="/estacionamiento/ver" class="btn btn-warning"><span class="material-symbols-outlined">directions_car</span>Visualizar Estacionamiento</a>
+            <a href="/estacionamiento/search" class="btn btn-warning"><span class="material-symbols-outlined">search</span>Buscar lugar / ticket</a>
         </div>
     </div>
     <div class="row">
-        <h2>Notificaciones</h2>
+        <h2><span class="material-symbols-outlined">notifications</span>Notificaciones</h2>
         <div class="container">
             <a class="btn btn-warning" href="/alertas/avisos">
+                <span class="material-symbols-outlined">warning</span>
                 Alertas <span class="badge text-bg-secondary">{{ n_avisos }}</span>
             </a>
             
-            <a href="/alertas/historial" class="btn btn-warning">Historial</a>
+            <a href="/alertas/historial" class="btn btn-warning"><span class="material-symbols-outlined">history</span>Historial</a>
         </div>
     </div>
     {% if usuario == 'Administrador' %}
     <div class="row">
-        <h2>Configuracion</h2>
+        <h2><span class="material-symbols-outlined">settings</span>Configuracion</h2>
         <div class="container">
-            <a href="/configuracion/agregar" class="btn btn-warning">Agregar lugar</a>
-            <a href="/configuracion/borrar" class="btn btn-warning">Eliminar lugar</a>
-            <a href="/configuracion/modificar" class="btn btn-warning">Modificar lugar</a>
-            <a href="/configuracion/usuarios" class="btn btn-warning">Administrar Usuarios</a>
-            <a href="/configuracion/precios" class="btn btn-warning">Administrar Precios</a>
+            <a href="/configuracion/agregar" class="btn btn-warning"><span class="material-symbols-outlined">library_add</span>Agregar lugar</a>
+            <a href="/configuracion/borrar" class="btn btn-warning"><span class="material-symbols-outlined">shadow_minus</span>Eliminar lugar</a>
+            <a href="/configuracion/modificar" class="btn btn-warning"><span class="material-symbols-outlined">edit</span>Modificar lugar</a>
+            <a href="/configuracion/usuarios" class="btn btn-warning"><span class="material-symbols-outlined">manage_accounts</span>Administrar Usuarios</a>
+            <a href="/configuracion/precios" class="btn btn-warning"><span class="material-symbols-outlined">payments</span>Administrar Precios</a>
         </div>
     </div>
     {% endif %}

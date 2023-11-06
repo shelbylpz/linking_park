@@ -86,7 +86,7 @@ def pago(id):
             'tiempo': update_time(data[1]),
             'cobro': monto_pago(data[1])
         }
-        return render_template('/pago/info.html',codigo=id, newdata=newdata)
+        return render_template('/pago/info.html',codigo=id, newdata=newdata, usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -94,7 +94,7 @@ def pago(id):
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/pago/info.html', codigo='No encontrado')
+    return render_template('/pago/info.html', codigo='No encontrado', usuario=session['usuario'])
 
 @app.route('/pago/<id>', methods=['POST'])
 def pago_post(id):
@@ -445,12 +445,16 @@ def configuracion_usuarios():
         return redirect('/')
     return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), usuario=session['usuario'], n_avisos=verificar_nalertas())
 
-@app.route('/configuracion/usuarios/add', methods=['POST'])
+@app.route('/configuracion/usuarios', methods=['POST'])
 def configuracion_usuarios_add():
     if not 'login' in session:
         return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
+    _accion = request.form['accion']
+    if _accion == 'delete':
+        _id = request.form['txtID']
+        return configuracion_users_delete(_id)
     _username = request.form['txtNombre']
     _password = request.form['txtPassword']
     _tipo = request.form.get("txtTipo")
@@ -465,7 +469,7 @@ def configuracion_usuarios_add():
         conexion.commit()
         conexion.close()
         mensaje = ["success","Usuario agregado correctamente!", ""]
-        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(),n_avisos=verificar_nalertas())
+        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(),n_avisos=verificar_nalertas(), usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -473,20 +477,16 @@ def configuracion_usuarios_add():
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/configuracion/usuarios.html', error=True, registros=data_for_users_table(),n_avisos=verificar_nalertas())
+    return render_template('/configuracion/usuarios.html', error=True, registros=data_for_users_table(),n_avisos=verificar_nalertas(), usuario=session['usuario'])
 
-@app.route("/configuracion/usuarios/delete", methods=['POST'])
-def configuracion_users_delete():
+def configuracion_users_delete(_id):
     if not 'login' in session:
         return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
-    _id = request.form['txtID']
-    print(session["id"])
-    print(_id)
     if int(_id) == int(session["id"]) :
         mensaje = ["warning","Usuario no eliminado!","El Usuario tiene una session abierta!"]
-        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas())
+        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
     try:
         conexion = conectar_db()
         cursor = conexion.cursor()
@@ -495,7 +495,7 @@ def configuracion_users_delete():
         conexion.commit()
         conexion.close()
         mensaje = ["success","Usuario eliminado!","El Usuario ha sido eliminado correctamente!"]
-        return render_template('/configuracion/usuarios.html',mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas())
+        return render_template('/configuracion/usuarios.html',mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas(), usuario=session['usuario']) 
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -503,17 +503,7 @@ def configuracion_users_delete():
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), n_avisos=verificar_nalertas())
-
-@app.route("/configuracion/usuarios/edit", methods=['POST'])
-def configuracion_users_edit():
-    if not 'login' in session:
-        return redirect('/login')
-    if session['usuario'] != 'Administrador':
-        return redirect('/')
-    _id = request.form['txtID']
-    print(session["id"])
-    print(_id)
+    return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
 
 @app.route("/configuracion/precios")
 def configuracion_precios():
@@ -550,7 +540,7 @@ def configuracion_precios_add():
             conexion.commit()
             conexion.close()
             mensaje = ["success","Precio agregado correctamente!", ""]
-            return render_template('/configuracion/precios.html', mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas())
+            return render_template('/configuracion/precios.html', mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error durante la ejecucion de la consulta: ", error)
         finally:
@@ -569,7 +559,7 @@ def configuracion_precios_delete(id):
         conexion.commit()
         conexion.close()
         mensaje = ["success","Precio eliminado!","El precio ha sido eliminado correctamente!"]
-        return render_template('/configuracion/precios.html',mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas())
+        return render_template('/configuracion/precios.html',mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:

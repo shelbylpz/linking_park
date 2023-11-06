@@ -12,13 +12,17 @@
     <br>
     {% endif %}
     <div class="row">
+        <br>
+        <h1>Administrador de Usuarios</h1>
+        <br>
         <div class="col-md-5">
             <div class="card">
                 <div class="card-header">
                     Datos del Usuario
                 </div>
                 <div class="card-body">
-                    <form action="/configuracion/usuarios/add" method="post" enctype="multipart/form-data">
+                    <form action="/configuracion/usuarios" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="accion" value="add">
                         <div class="mb-3">
                             <label for="txtNombre" class="form-label">Usuario:</label>
                             <input type="text" class="form-control" name="txtNombre" id="txtNombre"aria-describedby="helpId" placeholder="Escriba el nombre del usuario" required>
@@ -62,21 +66,12 @@
                         <td>{{ registro[1] }}</td>
                         <td>{{ registro[2] }}</td>
                         <td>{{ registro[3] }}</td>
-                        <td>
-                            <ul class="acciones">
-                                <li>
-                                    <form action="" method="post">
+                        <td class="acciones">
+                                    <form action="/configuracion/usuarios" method="post">
+                                        <input type="hidden" name="accion" value="delete">
                                         <input value="{{ registro[0] }}" type="hidden" name="txtID" id="txtID">
-                                        <button type="submit" class="btn btn-primary">Editar</button>
-                                    </form>  
-                                </li>
-                                <li>
-                                    <form action="/configuracion/usuarios/delete" method="post">
-                                        <input value="{{ registro[0] }}" type="hidden" name="txtID" id="txtID">
-                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
                                     </form>
-                                </li>
-                            </ul>
                         </td>
                     </tr>
                     {% endfor %}
