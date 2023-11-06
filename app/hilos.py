@@ -2,7 +2,7 @@ import psycopg2
 import datetime
 import time
 import os
-from connect import conectar_db
+from funciones import conectar_db
 
 
 def verificar_tiempo():
