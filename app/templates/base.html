@@ -8,35 +8,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% if Autos %}
     <script>
-        setTimeout(function(){
-           window.location.reload(1);
-        },  10000);
-        </script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 10000);
+    </script>
     {% else %}{% if registros %}
     <script>
-        setTimeout(function(){
-           window.location.reload(1);
-        },  60000);
-        </script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 60000);
+    </script>
     {% else %}{% if newdata %}
     <script>
-        setTimeout(function(){
-           window.location.reload(1);
-        },  300000);
-        </script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 300000);
+    </script>
     {% else %}{% if precios %}
     <script>
-        setTimeout(function(){
-           window.location.reload(1);
-        },  180000);
-        </script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 180000);
+    </script>
     {% else %}
 
     <script>
-        setTimeout(function(){
-           window.location.reload(1);
-        },  30000);
-        </script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 30000);
+    </script>
     {% endif %}
     {% endif %}
     {% endif %}
@@ -45,21 +45,23 @@
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/base.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js" integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js"
+        integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: rgb(23, 30, 41);">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/"> 
+            <a class="navbar-brand" href="/">
                 <img src="/img/logo.jpg" alt="Logo" width="34" height="30" class="d-inline-block align-text-top">
                 Linking Park
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation" style="background-color: rgba(62, 81, 116, 0.822);">
-                <span class="navbar-toggler-icon" ></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -68,10 +70,11 @@
                             <span class="material-symbols-outlined">home</span>Inicio
                         </a>
                     </li>
-                    
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false"><span class="material-symbols-outlined">local_parking</span>Estacionamiento
+                            aria-expanded="false"><span
+                                class="material-symbols-outlined">local_parking</span>Estacionamiento
                         </a>
                         <ul class="dropdown-menu" style="background-color: rgb(23, 30, 41);">
                             <li><a class="dropdown-item" href="/estacionamiento/inout">Entradas / Salidas</a></li>
@@ -81,11 +84,12 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false"><span class="material-symbols-outlined">notifications</span>Notificaciones
+                            aria-expanded="false"><span
+                                class="material-symbols-outlined">notifications</span>Notificaciones
                         </a>
                         <ul class="dropdown-menu" style="background-color: rgb(23, 30, 41);">
-                            <li><a class="dropdown-item" href="/alertas/avisos" >Alerta</a></li>
-                            <li><a class="dropdown-item" href="/alertas/historial" >Historial</a></li>
+                            <li><a class="dropdown-item" href="/alertas/avisos">Alerta</a></li>
+                            <li><a class="dropdown-item" href="/alertas/historial">Historial</a></li>
                         </ul>
                     </li>
                     {% if usuario == 'Administrador' %}
@@ -94,82 +98,90 @@
                             aria-expanded="false"><span class="material-symbols-outlined">settings</span> Configuracion
                         </a>
                         <ul class="dropdown-menu" style="background-color: rgb(23, 30, 41);">
-                            <li ><a class="dropdown-item" href="/configuracion/agregar">Agregar lugar</a></li>
-                            <li ><a class="dropdown-item" href="/configuracion/borrar">Eliminar lugar</a></li>
-                            <li ><a class="dropdown-item" href="/configuracion/modificar">Modificar lugar</a></li>
-                            <li ><a class="dropdown-item" href="/configuracion/usuarios">Admninistrar Usuarios</a></li>
-                            <li ><a class="dropdown-item" href="/configuracion/precios">Precios</a></li>
+                            <li><a class="dropdown-item" href="/configuracion/agregar">Agregar lugar</a></li>
+                            <li><a class="dropdown-item" href="/configuracion/borrar">Eliminar lugar</a></li>
+                            <li><a class="dropdown-item" href="/configuracion/modificar">Modificar lugar</a></li>
+                            <li><a class="dropdown-item" href="/configuracion/usuarios">Admninistrar Usuarios</a></li>
+                            <li><a class="dropdown-item" href="/configuracion/precios">Precios</a></li>
                         </ul>
                     </li>
                     {% endif %}
                 </ul>
-                <div class="out">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <div class="out d-flex align-items-center">
+                    <!-- Botón de Pago -->
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">
                         <span class="material-symbols-outlined">qr_code_scanner</span>Pago
                     </button>
-                    
+
                     <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <main>
+                                        <div id="reader"></div>
+                                        <div id="result"></div>
+                                    </main>
+                                    <script>
+
+                                        const scanner = new Html5QrcodeScanner('reader', {
+                                            // Scanner will be initialized in DOM inside element with id of 'reader'
+                                            qrbox: {
+                                                width: 350,
+                                                height: 350,
+                                            },  // Sets dimensions of scanning box (set relative to reader element width)
+                                            fps: 20, // Frames per second to attempt a scan
+                                        });
+
+
+                                        scanner.render(success, error);
+                                        // Starts scanner
+
+                                        function success(result) {
+
+                                            scanner.clear(); // Clears scanning instance
+
+                                            document.getElementById('reader').remove(); // Removes reader element from DOM since no longer needed
+
+                                            window.location.replace('/pago/' + result); //Redirects
+                                        }
+
+                                        function error(err) {
+                                            console.error(err);
+                                        }
+
+                                    </script>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Understood</button>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <main>
-                                    <div id="reader"></div>
-                                    <div id="result"></div>
-                                </main>
-                                <script>
-    
-                                    const scanner = new Html5QrcodeScanner('reader', { 
-                                        // Scanner will be initialized in DOM inside element with id of 'reader'
-                                        qrbox: {
-                                            width: 350,
-                                            height: 350,
-                                        },  // Sets dimensions of scanning box (set relative to reader element width)
-                                        fps: 20, // Frames per second to attempt a scan
-                                    });
-                                    
-                                
-                                    scanner.render(success, error);
-                                    // Starts scanner
-                                
-                                    function success(result) {
-                                
-                                        scanner.clear(); // Clears scanning instance
-                                
-                                        document.getElementById('reader').remove(); // Removes reader element from DOM since no longer needed
-                                        
-                                        window.location.replace('/pago/' + result); //Redirects
-                                    }
-                                    
-                                    function error(err) {
-                                        console.error(err);
-                                    }
-                                    
-                                </script>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Understood</button>
-                            </div>
-                        </div>
                         </div>
                     </div>
-                    <a class="btn btn-outline-warning" href="/alertas/avisos">
-                        {% if n_avisos <= 0 %}
-                        <span class="material-symbols-outlined">notifications</span>
-                        {%else%}
-                        <span class="material-symbols-outlined">notifications_active</span>
-                        {%endif%}   
-                        Alertas <span class="badge text-bg-secondary">{{n_avisos}}</span>
+                    <!-- Botón de Alertas -->
+                    <a class="btn btn-outline-warning d-flex align-items-center" href="/alertas/avisos">
+                        {% if n_avisos <= 0 %} <span class="material-symbols-outlined">notifications</span>
+                            {% else %}
+                            <span class="material-symbols-outlined">notifications_active</span>
+                            {% endif %}
+                            Alertas <span class="badge text-bg-secondary">{{n_avisos}}</span>
                     </a>
-                    <a class="btn btn-outline-warning" href="/LogOut" role="button"><i class="material-symbols-outlined">logout</i>Log Out</a>
+
+                    <!-- Botón de Logout -->
+                    <a class="btn btn-outline-warning d-flex align-items-center" href="/LogOut" role="button">
+                        <i class="material-symbols-outlined">logout</i>Log Out
+                    </a>
                 </div>
             </div>
-        </div> 
+        </div>
     </nav>
     <div><br></div>

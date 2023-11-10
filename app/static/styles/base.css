@@ -28,3 +28,20 @@ body {
     display: flex;
     align-items: center;
 }
+
+.out {
+    display: flex;
+    align-items: center;
+}
+
+.btn-outline-primary,
+.btn-outline-warning {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Espacio entre los botones */
+}
+
+
+.btn-outline-warning i.material-symbols-outlined {
+    margin-right: 5px; /* Espacio entre icono y texto */
+}
