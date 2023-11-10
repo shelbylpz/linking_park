@@ -23,3 +23,8 @@ body {
     color:#000;
     background-color: #ffc107;
 }
+
+.navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+}
