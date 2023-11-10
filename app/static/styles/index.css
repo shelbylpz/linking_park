@@ -1,15 +1,30 @@
+/* Estilos generales para enlaces */
 a {
     text-decoration: none;
     color: black;
 }
-.card-body a:hover{
+
+/* Cambio de color al pasar el ratón sobre enlaces dentro de un card-body */
+.card-body a:hover {
     color: cornflowerblue;
 }
-.lista{
+
+/* Estilos para una lista sin viñetas */
+.lista {
     list-style-type: none;
 }
-.container .row .container .btn{
+
+/* Estilos para los botones dentro de los contenedores en las filas dentro de un contenedor */
+.container .row .container .btn {
     margin: 10px;
     padding: 15px;
-    
+}
+
+/* Estilos adicionales para alinear iconos con texto en los botones */
+.container .row .container .btn.d-flex.align-items-center {
+    justify-content: center; /* Alinea horizontalmente contenido en los botones */
+}
+
+.container .row .container .btn.d-flex.align-items-center .material-symbols-outlined {
+    margin-right: 5px; /* Ajustar el espacio entre el ícono y el texto según sea necesario */
 }
