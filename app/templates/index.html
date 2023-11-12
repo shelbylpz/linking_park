@@ -7,34 +7,52 @@
 <div class="container">
     <div class="row">
         <h2><span class="material-symbols-outlined">local_parking</span>Estacionamiento</h2>
-        <div class="container">
-            <a href="/estacionamiento/inout" class="btn btn-warning"><span class="material-symbols-outlined">table_view</span>Entradas / Salidas</a>
-            <a href="/estacionamiento/ver" class="btn btn-warning"><span class="material-symbols-outlined">directions_car</span>Visualizar Estacionamiento</a>
-            <a href="/estacionamiento/search" class="btn btn-warning"><span class="material-symbols-outlined">search</span>Buscar lugar / ticket</a>
+        <div class="container d-flex align-items-center">
+            <a href="/estacionamiento/inout" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">table_view</span>Entradas / Salidas
+            </a>
+            <a href="/estacionamiento/ver" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">directions_car</span>Visualizar Estacionamiento
+            </a>
+            <a href="/estacionamiento/search" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">search</span>Buscar lugar / ticket
+            </a>
         </div>
     </div>
     <div class="row">
         <h2><span class="material-symbols-outlined">notifications</span>Notificaciones</h2>
-        <div class="container">
-            <a class="btn btn-warning" href="/alertas/avisos">
+        <div class="container d-flex align-items-center">
+            <a class="btn btn-warning d-flex align-items-center" href="/alertas/avisos">
                 <span class="material-symbols-outlined">warning</span>
                 Alertas <span class="badge text-bg-secondary">{{ n_avisos }}</span>
             </a>
-            
-            <a href="/alertas/historial" class="btn btn-warning"><span class="material-symbols-outlined">history</span>Historial</a>
+            <a href="/alertas/historial" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">history</span>Historial
+            </a>
         </div>
     </div>
     {% if usuario == 'Administrador' %}
     <div class="row">
         <h2><span class="material-symbols-outlined">settings</span>Configuracion</h2>
-        <div class="container">
-            <a href="/configuracion/agregar" class="btn btn-warning"><span class="material-symbols-outlined">library_add</span>Agregar lugar</a>
-            <a href="/configuracion/borrar" class="btn btn-warning"><span class="material-symbols-outlined">shadow_minus</span>Eliminar lugar</a>
-            <a href="/configuracion/modificar" class="btn btn-warning"><span class="material-symbols-outlined">edit</span>Modificar lugar</a>
-            <a href="/configuracion/usuarios" class="btn btn-warning"><span class="material-symbols-outlined">manage_accounts</span>Administrar Usuarios</a>
-            <a href="/configuracion/precios" class="btn btn-warning"><span class="material-symbols-outlined">payments</span>Administrar Precios</a>
+        <div class="container d-flex align-items-center">
+            <a href="/configuracion/agregar" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">library_add</span>Agregar lugar
+            </a>
+            <a href="/configuracion/borrar" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">shadow_minus</span>Eliminar lugar
+            </a>
+            <a href="/configuracion/modificar" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">edit</span>Modificar lugar
+            </a>
+            <a href="/configuracion/usuarios" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">manage_accounts</span>Administrar Usuarios
+            </a>
+            <a href="/configuracion/precios" class="btn btn-warning d-flex align-items-center">
+                <span class="material-symbols-outlined">payments</span>Administrar Precios
+            </a>
         </div>
     </div>
     {% endif %}
 </div>
+
 {% include 'end.html' %}
