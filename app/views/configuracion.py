@@ -133,8 +133,22 @@ def configuracion_usuarios():
         return redirect('/')
     return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), usuario=session['usuario'], n_avisos=verificar_nalertas())
 
-@configuracion.route('/configuracion/usuarios/add', methods=['POST'])
-def configuracion_usuarios_add():
+@configuracion.route("/configuracion/usuarios", methods=['POST'])
+def configuracion_usuarios_post():
+    if not 'login' in session:
+        return redirect('/login')
+    if session['usuario'] != 'Administrador':
+        return redirect('/')
+    accion = request.form['accion']
+    if accion == 'delete':
+        return configuracion_users_delete(request.form['id'])
+    if accion == 'add':
+        return configuracion_usuarios_add(request)
+    if accion == 'edit':
+        return configuracion_users_edit(request)
+    return redirect('/configuracion/usuarios')
+
+def configuracion_usuarios_add(request):
     if not 'login' in session:
         return redirect('/login')
     if session['usuario'] != 'Administrador':
@@ -153,7 +167,7 @@ def configuracion_usuarios_add():
         conexion.commit()
         conexion.close()
         mensaje = ["success","Usuario agregado correctamente!", ""]
-        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(),n_avisos=verificar_nalertas())
+        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(),n_avisos=verificar_nalertas(), usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -161,20 +175,18 @@ def configuracion_usuarios_add():
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/configuracion/usuarios.html', error=True, registros=data_for_users_table(),n_avisos=verificar_nalertas())
+    return render_template('/configuracion/usuarios.html', error=True, registros=data_for_users_table(),n_avisos=verificar_nalertas(), usuario=session['usuario'])
 
-@configuracion.route("/configuracion/usuarios/delete", methods=['POST'])
-def configuracion_users_delete():
+def configuracion_users_delete(_id):
     if not 'login' in session:
         return redirect('/login')
     if session['usuario'] != 'Administrador':
         return redirect('/')
-    _id = request.form['txtID']
     print(session["id"])
     print(_id)
     if int(_id) == int(session["id"]) :
         mensaje = ["warning","Usuario no eliminado!","El Usuario tiene una session abierta!"]
-        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas())
+        return render_template('/configuracion/usuarios.html', mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
     try:
         conexion = conectar_db()
         cursor = conexion.cursor()
@@ -183,7 +195,7 @@ def configuracion_users_delete():
         conexion.commit()
         conexion.close()
         mensaje = ["success","Usuario eliminado!","El Usuario ha sido eliminado correctamente!"]
-        return render_template('/configuracion/usuarios.html',mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas())
+        return render_template('/configuracion/usuarios.html',mensaje=mensaje, registros=data_for_users_table(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -191,9 +203,8 @@ def configuracion_users_delete():
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), n_avisos=verificar_nalertas())
+    return render_template('/configuracion/usuarios.html', registros=data_for_users_table(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
 
-@configuracion.route("/configuracion/usuarios/edit", methods=['POST'])
 def configuracion_users_edit():
     if not 'login' in session:
         return redirect('/login')
@@ -238,7 +249,7 @@ def configuracion_precios_add():
             conexion.commit()
             conexion.close()
             mensaje = ["success","Precio agregado correctamente!", ""]
-            return render_template('/configuracion/precios.html', mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas())
+            return render_template('/configuracion/precios.html', mensaje=mensaje, precios=datos_pago_parking_fixed(), n_avisos=verificar_nalertas(), usuario=session['usuario'])
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error durante la ejecucion de la consulta: ", error)
         finally:

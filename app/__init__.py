@@ -6,7 +6,7 @@ import datetime
 import time
 import threading
 #Blueprints
-from funciones import *
+from views.funciones import *
 from views.configuracion import configuracion
 from views.login import loginLogout
 from views.notificaciones import notificaciones

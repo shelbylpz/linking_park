@@ -21,11 +21,11 @@ def pago(id):
         conexion.close()
         print(data)
         if data is None:
-            return render_template('/pago/info.html', error='No encontrado')
+            return render_template('/pago/info.html', error='No encontrado',n_avisos=verificar_nalertas(), usuario=session['usuario'])
         if data[2]:
-            return render_template('/pago/info.html', error='Boleto Ya pagado')
+            return render_template('/pago/info.html', error='Boleto Ya pagado',n_avisos=verificar_nalertas(), usuario=session['usuario'])
         if lugar[6] == "no-verificado":
-            return render_template('/pago/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.')
+            return render_template('/pago/info.html', error='Boleto no Verificado, Por favor escaneelo en el lugar correspondiente para poder salir.',n_avisos=verificar_nalertas(), usuario=session['usuario'])
         newdata = {
             'id': data[0],
             'entrada': datetime.datetime.strptime(str(data[1]), "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S"),
@@ -33,7 +33,7 @@ def pago(id):
             'tiempo': update_time(data[1]),
             'cobro': monto_pago(data[1])
         }
-        return render_template('/pago/info.html',codigo=id, newdata=newdata)
+        return render_template('/pago/info.html',codigo=id, newdata=newdata,n_avisos=verificar_nalertas(), usuario=session['usuario'])
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error durante la ejecucion de la consulta: ", error)
     finally:
@@ -41,7 +41,7 @@ def pago(id):
             cursor.close()
         if conexion is not None:
             conexion.close()
-    return render_template('/pago/info.html', codigo='No encontrado')
+    return render_template('/pago/info.html', codigo='No encontrado', n_avisos=verificar_nalertas(), usuario=session['usuario'])
 
 @pagos.route('/pago/<id>', methods=['POST'])
 def pago_post(id):

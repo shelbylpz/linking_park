@@ -56,8 +56,14 @@
                                     {% elif find[0][2] == 'moto' %}Motos
                                 {% endif %} ({{ find[0][4] }}) <br>
                                 Estado: 
-                                {% if find[0][3] == true %}Disponible
-                                    {% else %}Ocupado <br>
+                                {% if find[0][3] == 0 %}
+                                    {% if find[0][6] == 'no-verificado' %}
+                                        No Verificado <br>
+                                        N Ticket: {{ find[0][5] }} <br>
+                                        <img src="/qr/{{ find[0][5] }}.png" alt="qr">
+                                    {% else %}Disponible <br>
+                                    {% endif %}
+                                {% else %}Ocupado <br>
                                 N Ticket: {{ find[0][5] }} <br>
                                 <img src="/qr/{{ find[0][5] }}.png" alt="qr">
                                 {% endif %}

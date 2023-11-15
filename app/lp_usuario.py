@@ -17,11 +17,11 @@ def asignar_lugar(seccion):
     conexion = conectar_db()
     cursor = conexion.cursor()
     if (seccion == 'a'):
-        cursor.execute("SELECT * FROM lugar WHERE seccion='A' AND disponible=True ORDER BY numero;")
+        cursor.execute("SELECT * FROM hlugar WHERE seccion='A' AND estado=0 ORDER BY numero;")
     if (seccion == 'd'):
-        cursor.execute("SELECT * FROM lugar WHERE seccion='D' AND disponible=True ORDER BY numero;")
+        cursor.execute("SELECT * FROM hlugar WHERE seccion='D' AND estado=0 ORDER BY numero;")
     if (seccion == 'm'):
-        cursor.execute("SELECT * FROM lugar WHERE seccion='M' AND disponible=True ORDER BY numero;")
+        cursor.execute("SELECT * FROM hlugar WHERE seccion='M' AND estado=0 ORDER BY numero;")
     disponibles = cursor.fetchall()
     ndisp = len(disponibles)
     if ndisp == 0 :
@@ -40,7 +40,7 @@ def asignar_lugar(seccion):
         print(hnow)
         sql = "INSERT INTO ticket(id,entrada,lugar) VALUES ('"+str(nticket)+"','"+str(tnow)+"','"+str(asignado)+"');"
         cursor.execute(sql)
-        cursor.execute("UPDATE lugar SET disponible=False, ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
+        cursor.execute("UPDATE hlugar SET estado=0,status='no-verificado', ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
         generator(nticket)
         gen_Ticket(nticket)
         conexion.commit()
