@@ -42,15 +42,15 @@
                                     <input type="hidden" name="accion" value="agregar">
                                       <div class="mb-3">
                                           <label for="txtPrecio" class="form-label">Precio:</label>
-                                          <input type="number" step="1" class="form-control" name="txtPrecio" id="txtPrecio"aria-describedby="helpId" placeholder="Escriba el precio" required>
+                                          <input type="number" step="1" class="form-control" name="txtPrecio" id="txtPrecio"aria-describedby="helpId" placeholder="Escriba el precio" max="10000" required>
                                       </div>
                                       <div class="mb-3">
                                           <label for="txtTiempo" class="form-label">Tiempo (Dias / Horas / Minutos / Segundos):</label>
                                           <div class="input-group">
-                                              <input type="number" class="form-control" name="dia" id="dia"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
-                                              <input type="number" class="form-control" name="hora" id="hora"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
-                                              <input type="number" class="form-control" name="minuto" id="minuto"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
-                                              <input type="number" class="form-control" name="segundo" id="segundo"aria-describedby="helpId" value="0" aria-valuemin="0"  required>
+                                              <input type="number" class="form-control" name="dia" id="dia"aria-describedby="helpId" value="0" aria-valuemin="0" min="0" max="30" required>
+                                              <input type="number" class="form-control" name="hora" id="hora"aria-describedby="helpId" value="0" aria-valuemin="0" min="0" max="24"  required>
+                                              <input type="number" class="form-control" name="minuto" id="minuto"aria-describedby="helpId" value="0" aria-valuemin="0" min="0" max="60"  required>
+                                              <input type="number" class="form-control" name="segundo" id="segundo"aria-describedby="helpId" value="0" aria-valuemin="0" min="0" max="60" required>
                                           </div>
                                       </div>
                                   </div>

@@ -1,7 +1,17 @@
 const segundoInput = document.getElementById('segundo');
-    const minutoInput = document.getElementById('minuto');
-    const horaInput = document.getElementById('hora');
-    const diaInput = document.getElementById('dia');
+const minutoInput = document.getElementById('minuto');
+const horaInput = document.getElementById('hora');
+const diaInput = document.getElementById('dia');
+const precioInput = document.getElementById('txtPrecio');
+
+    precioInput.addEventListener('input', () => {
+        if (precioInput.value < 0) {
+            precioInput.value = 0;
+        }
+        if (precioInput.value > 10000) {
+            precioInput.value = 10000;
+        }
+    });
 
     segundoInput.addEventListener('input', () => {
         if (segundoInput.value >= 60) {
@@ -73,5 +83,8 @@ const segundoInput = document.getElementById('segundo');
     diaInput.addEventListener('input', () => {
         if(diaInput.value < 0){
             diaInput.value = 0;
+        }
+        if(diaInput.value > 30){
+            diaInput.value = 30;
         }
     });
