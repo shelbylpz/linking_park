@@ -47,7 +47,7 @@ def estacionamiento_ver_search():
         cursor = conexion.cursor()
         cursor.execute("SELECT * FROM hlugar WHERE id='"+_lugar+"';")
         find = cursor.fetchall()
-        if (find[0][3] >= 2):
+        if (find[0][3] == 1):
             idTcket = find[0][5]
             print(idTcket)
             cursor.execute("SELECT entrada, salida FROM ticket WHERE id='"+idTcket+"';")
@@ -103,10 +103,12 @@ def estacionamiento_search_find():
             cursor.execute("SELECT * FROM hlugar WHERE id='"+_lugar+"';")
             find = cursor.fetchall()
             print(find)
-            if (find[0][3] == False):
+            if (find[0][3] == 1):
                 qrco = str(route)+"/app/QRCodes/img/"+str(find[0][5])+".png" #Asigna ruta de qr a variable
                 print(qrco)
                 if(os.path.exists(qrco) == False): # Se verifica que el archivo exista si no se genera
+                    print('Se intento generar QR')
+                    print(find[0][5])
                     generator(find[0][5])
             tipo = 'l'
         if _tipo == 'ticket':
