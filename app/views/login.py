@@ -17,6 +17,7 @@ def login_post():
     print(_password)
     try:
         conexion = conectar_db()
+        print(conexion)
         cursor = conexion.cursor()
         query = "SELECT * FROM users WHERE usuario='"+str(_usuario)+"';"
         cursor.execute(query)

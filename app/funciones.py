@@ -9,10 +9,10 @@ from pyqrcode import QRCode #Esta tambien es escencial para el funcionamiento de
 
 def conectar_db():
     conn = psycopg2.connect(
-      database="linking_park", 
+      database="LinkingParkDB", 
       user='postgres', 
-      password='RTvAsfCAv3neSn', 
-      host='serverproyectoxdbbdd.postgres.database.azure.com', 
+      password='A47Japt6CkKTM-6', 
+      host='linking-park-server.postgres.database.azure.com', 
       port= '5432'
    )
     return conn
