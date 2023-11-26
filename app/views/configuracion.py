@@ -64,7 +64,7 @@ def configuracion_borrar_delete():
     cursor.execute("SELECT * FROM hlugar WHERE id='"+str(_id)+"';")
     data = cursor.fetchone()
     print(data)
-    if (data[3] == False):
+    if (data[3] == '1'):
         print("No se puede mijo")
         conexion.commit()
         conexion.close()
@@ -110,17 +110,19 @@ def configuracion_modificar_update():
         
         generator(nticket)
     else:
-        idticket = find[5]
-        cursor.execute("SELECT entrada FROM ticket WHERE id='"+str(idticket)+"';")
-        entrada = cursor.fetchone()
-        entrada = entrada[0]
-        now = datetime.datetime.now()
-        tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
-        tiempo = update_time(entrada)
-        print(tiempo)
-        cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
-        cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(_id)+"';")
-   
+        if find[6] == 'no-verificado':
+            cursor.execute("UPDATE hlugar SET status='asignado' WHERE id='"+str(_id)+"';")
+        else:
+            idticket = find[5]
+            cursor.execute("SELECT entrada FROM ticket WHERE id='"+str(idticket)+"';")
+            entrada = cursor.fetchone()
+            entrada = entrada[0]
+            now = datetime.datetime.now()
+            tnow = now.strftime("%Y-%m-%d %H:%M:%S.%f") #Convierte la hora actual a un string con un formato definido
+            tiempo = update_time(entrada)
+            print(tiempo)
+            cursor.execute("UPDATE ticket SET salida='"+str(tnow)+"', tiempo='"+str(tiempo)+"' WHERE id='"+str(idticket)+"';")
+            cursor.execute("UPDATE hlugar SET estado='0', ticket=null, status='disponible' WHERE id='"+str(_id)+"';")
     conexion.commit()
     conexion.close()
     return redirect('/configuracion/modificar')
