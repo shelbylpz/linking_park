@@ -3,12 +3,12 @@ import psycopg2
 import datetime
 import random
 from QRCodes.QRGenerator import generator
-from boleto.ticket import gen_Ticket, imprimirboleto
+from boleto.ticket import gen_Ticket, imprimirboleto, abrirboleto
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from _tkinter import TclError
-from connect import conectar_db
+from funciones import conectar_db
 
 
 
@@ -43,6 +43,7 @@ def asignar_lugar(seccion):
         cursor.execute("UPDATE hlugar SET estado=0,status='no-verificado', ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
         generator(nticket)
         gen_Ticket(nticket)
+        abrirboleto()
         conexion.commit()
         print(sql)
         conexion.close()

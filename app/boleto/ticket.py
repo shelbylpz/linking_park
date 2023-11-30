@@ -46,3 +46,6 @@ def imprimirboleto():
     print_tool.timeout = 10
     
     print_tool.print_file(filePdf)
+
+def abrirboleto():
+    os.system('app/boleto/ticket/ticket.pdf')
