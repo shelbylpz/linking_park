@@ -4,6 +4,12 @@ a {
     color: black;
 }
 
+
+.badge {
+    margin-top: 5px;
+    margin-left: 7px;
+}
+
 /* Cambio de color al pasar el ratón sobre enlaces dentro de un card-body */
 .card-body a:hover {
     color: cornflowerblue;
