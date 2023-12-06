@@ -25,11 +25,19 @@ Linking Park es un programa para la ayuda de gestión de un estacionamiento pequ
 * Una vez activado esto procederemos a ejecutar el archivo .bat descargado. Y este clonara el repo e instalara el programa. En caso de fallar la activación del Virtuan Env, Cancelar el .bat con `CTRL + C` y proceder a una activacion manual en el punto .
 * Si concluyo la instalacion y activacion del programa solo debe buscar en el navegador de su preferencia la ruta [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-### Instalacion Manual:
+### Instalación Automatica en Linux
+* Descargar el archivo .sh del repositorio
+* Ejecutar .sh, lo cual clonará el repositorio e instalará el programa.
+```bash
+bash startLinux.sh
+```
+* Si concluyo la instalacion y activacion del programa solo debe buscar en el navegador de su preferencia la ruta [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+### Instalacion Manual Windows:
 * Para la instalación Manual puede usar el .bat y detenerlo al intentar Activar el Entorno Virtual.
 * De lo contrario, Clone el repositorio.
 * Inicie una terminal y escriba los siguientes comandos:
-```bash
+```bat
 # Ingrese a la ruta donde clono el repo ejemplo:
 $ cd C:/users/my_user/downloads/linking_park
 
@@ -51,6 +59,39 @@ $ python app/__init__.py
 #Instalacion Finalizada.
 
 ```
+
+### Instalación Manual Linux:
+### Instalar python
+#### Debian/Ubuntu
+```bash
+sudo apt update && sudo apt upgrade
+sudo apt install python3 python3-venv
+```
+#### Redhat
+```bash
+yum -y install @development
+yum -y install rh-python36
+yum -y install rh-python3-venv
+```
+#### Nix package manager
+[nix packages](https://search.nixos.org/packages?channel=unstable&show=python3&from=0&size=50&sort=relevance&type=packages&query=python)
+
+### Instalar programa
+```bash
+# Clonar repositorio
+git clone https://github.com/shelbylpz/linking_park.git
+
+# Crear y activar entorno virtual
+python3 -m venv venv
+source venv/bin/activate
+
+# Instalar requerimentos
+pip install -r requirements.txt
+
+# Iniciar el programa
+python3 app/__init__.py
+```
+
 ## Desarrolladores
 
 * Alberto Demian Lopez Vazquez
