@@ -43,6 +43,7 @@ def asignar_lugar(seccion):
         cursor.execute("UPDATE hlugar SET estado=0,status='no-verificado', ticket='"+str(nticket)+"' WHERE id='"+str(asignado)+"';")
         generator(nticket)
         gen_Ticket(nticket)
+        #imprimirboleto()
         abrirboleto()
         conexion.commit()
         print(sql)
