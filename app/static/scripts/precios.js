@@ -3,7 +3,6 @@ const minutoInput = document.getElementById('minuto');
 const horaInput = document.getElementById('hora');
 const diaInput = document.getElementById('dia');
 const precioInput = document.getElementById('txtPrecio');
-
     precioInput.addEventListener('input', () => {
         if (precioInput.value < 0) {
             precioInput.value = 0;
@@ -12,7 +11,6 @@ const precioInput = document.getElementById('txtPrecio');
             precioInput.value = 10000;
         }
     });
-
     segundoInput.addEventListener('input', () => {
         if (segundoInput.value >= 60) {
             segundoInput.value = 0;
@@ -42,7 +40,6 @@ const precioInput = document.getElementById('txtPrecio');
             diaInput.value++;
         }
     });
-
     minutoInput.addEventListener('input', () => {
         if (minutoInput.value >= 60) {
             minutoInput.value = 0;
@@ -63,9 +60,7 @@ const precioInput = document.getElementById('txtPrecio');
             horaInput.value = 0;
             diaInput.value++;
         }
-
     });
-    
     horaInput.addEventListener('input', () => {
         if (horaInput.value >= 24) {
             horaInput.value = 0;
@@ -79,7 +74,6 @@ const precioInput = document.getElementById('txtPrecio');
             diaInput.value = 0;
         }
     });
-
     diaInput.addEventListener('input', () => {
         if(diaInput.value < 0){
             diaInput.value = 0;
