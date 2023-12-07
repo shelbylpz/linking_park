@@ -91,7 +91,11 @@ pip install -r requirements.txt
 # Iniciar el programa
 python3 app/__init__.py
 ```
-
+## Notas de configuracion
+* Para la impresion del ticket se tiene que tener previamente configurada la impresora donde se imprimiran los tickets, esta debe estar configurada como predeterminada en el sistema.
+* El tamaño de hoja del ticket es el A7.
+* La linea que imprime el ticket esta comentada por motivos de pruebas, la funcion en cuestion se llama `imprimirboleto()`, para hacer las impresiones es solo necesario descomentarla y comentar la linea que abre el boleto llamada `abrirboleto()`.
+  
 ## Desarrolladores
 
 * Alberto Demian Lopez Vazquez
