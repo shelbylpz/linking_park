@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 import pathlib
 import printfactory
+import subprocess
 
 route = os.path.abspath(os.getcwd())
 print(route)
@@ -28,6 +29,7 @@ def gen_Ticket(id):
 
     #point pdfkit configuration
     config = pdfkit.configuration(wkhtmltopdf = path_to_pdf)
+    
 
     #Generar pdf
     template_loader = FileSystemLoader('./')
@@ -36,6 +38,19 @@ def gen_Ticket(id):
     output_text = template.render(context)
 
     pdfkit.from_string(output_text, output_path='app/boleto/ticket/ticket.pdf', configuration=config, css='app\\boleto\\ticket\style.css', options={"enable-local-file-access":""})
+    config = pdfkit.configuration(wkhtmltopdf=path_to_pdf)
+    options = {
+        'enable-local-file-access': '',
+        'page-size': 'A7',
+        'margin-top': '0mm',
+        'margin-right': '0mm',
+        'margin-bottom': '0mm',
+        'margin-left': '0mm',
+        'encoding': 'UTF-8',
+        'no-outline': None
+    }
+
+    pdfkit.from_string(output_text, output_path='app/boleto/ticket/ticket.pdf', configuration=config, css='app\\boleto\\ticket\style.css', options=options)
     
 
 def imprimirboleto():
@@ -48,4 +63,19 @@ def imprimirboleto():
     print_tool.print_file(filePdf)
 
 def abrirboleto():
-    os.system('app/boleto/ticket/ticket.pdf')
+    abrir_pdf('app/boleto/ticket/ticket.pdf')
+
+def abrir_pdf(file_path):
+    try:
+        subprocess.run(['xdg-open', file_path])  # Linux
+    except FileNotFoundError:
+        try:
+            subprocess.run(['open', file_path])  # macOS
+        except FileNotFoundError:
+            try:
+                subprocess.run(['start', file_path], shell=True)  # Windows
+            except FileNotFoundError:
+                print("No se pudo abrir el archivo PDF.")
+
+# Ejemplo de uso
+
